@@ -48,3 +48,5 @@ This library works fine in the default setting, however, it also provides how to
     ...
     />
 ```
+
+- Or set to ``AutoCompleteComboBoxSetting.Default`` to apply to all comboboxes.
