@@ -111,6 +111,24 @@ namespace DotNetKit.Windows.Controls
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
+        void OpenDropDown(Func<object, bool> filter)
+        {
+            using (Items.DeferRefresh())
+            {
+                Items.Filter = item => filter(item);
+            }
+
+            IsDropDownOpen = true;
+            Unselect();
+        }
+
+        void OpenDropDown()
+        {
+            var setting = SettingOrDefault;
+            var filter = setting.GetFilter(Text, TextFromItem);
+            OpenDropDown(filter);
+        }
+
         void UpdateSuggestionList()
         {
             var text = Text;
@@ -140,13 +158,7 @@ namespace DotNetKit.Windows.Controls
                 if (count > maxCount) return;
                 if (SeemsBackspacing(text, count)) return;
 
-                using (Items.DeferRefresh())
-                {
-                    Items.Filter = item => filter(item);
-                }
-
-                IsDropDownOpen = true;
-                Unselect();
+                OpenDropDown(filter);
             }
         }
 
@@ -177,6 +189,15 @@ namespace DotNetKit.Windows.Controls
                 );
         }
         #endregion
+
+        void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && e.Key == Key.Space)
+            {
+                OpenDropDown();
+                e.Handled = true;
+            }
+        }
 
         public AutoCompleteComboBox()
         {
