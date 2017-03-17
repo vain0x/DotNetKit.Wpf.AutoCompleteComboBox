@@ -16,7 +16,9 @@
             <DataTemplate DataType="{x:Type local:Person}">
                 <StackPanel>
                     <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                    <TextBlock Text="Some description." />
+                    <TextBlock>
+                        Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
+                    </TextBlock>
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -35,10 +37,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="SelectedItem:" />
+                <TextBlock Text="SelectedItem: " />
                 <TextBlock Grid.Column="1" Text="{Binding SelectedItem}" />
 
-                <TextBlock Grid.Row="1" Text="SelectedValue:" />
+                <TextBlock Grid.Row="1" Text="SelectedValue: " />
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedValue}" />
             </Grid>
         </GroupBox>
