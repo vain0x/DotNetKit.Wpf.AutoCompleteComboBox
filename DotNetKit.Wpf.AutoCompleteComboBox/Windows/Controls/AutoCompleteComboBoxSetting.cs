@@ -14,6 +14,8 @@ namespace DotNetKit.Windows.Controls
         /// <summary>
         /// Gets a filter which determines whether items should be suggested or not
         /// for the specified query.
+        /// Default: The filter function maps an item to <c>true</c>
+        /// if its text contains the query (case insensitive, ignoring surrounding spaces).
         /// </summary>
         /// <param name="query">
         /// The string the user input.
@@ -30,6 +32,7 @@ namespace DotNetKit.Windows.Controls
         /// As long as sthe number of suggested items is less than the value,
         /// this opens the drop down.
         /// Note that the value is larger, it's heavier to open the drop down.
+        /// Default: 100.
         /// </summary>
         public abstract int MaxSuggestionCount { get; }
 
@@ -48,9 +51,7 @@ namespace DotNetKit.Windows.Controls
             : AutoCompleteComboBoxSetting
         {
             /// <summary>
-            /// Gets a filter.
-            /// The function maps an item to <c>true</c>
-            /// if its text contains the query (case insensitive, ignoring surrounding spaces).
+            /// Gets the default filter.
             /// </summary>
             /// <param name="query"></param>
             /// <param name="stringFromItem"></param>
@@ -65,7 +66,7 @@ namespace DotNetKit.Windows.Controls
             }
 
             /// <summary>
-            /// Gets 100.
+            /// Gets the default value.
             /// </summary>
             public override int MaxSuggestionCount
             {
