@@ -50,6 +50,7 @@
     <Compile Include="Windows\Controls\AutoCompleteComboBox.xaml.cs">
       <DependentUpon>AutoCompleteComboBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Controls\AutoCompleteComboBoxSetting.cs" />
     <Compile Include="Windows\DependencyVariable.cs" />
     <Compile Include="Windows\Media\VisualTreeModule.cs" />
   </ItemGroup>

@@ -65,6 +65,26 @@ namespace DotNetKit.Windows.Controls
             return d.Value ?? "";
         }
 
+        #region Setting
+        static readonly DependencyProperty settingProperty =
+            DependencyProperty.Register(
+                "Setting",
+                typeof(AutoCompleteComboBoxSetting),
+                typeof(AutoCompleteComboBox)
+            );
+
+        public static DependencyProperty SettingProperty
+        {
+            get { return settingProperty; }
+        }
+
+        public AutoCompleteComboBoxSetting Setting
+        {
+            get { return (AutoCompleteComboBoxSetting)GetValue(SettingProperty); }
+            set { SetValue(SettingProperty, value); }
+        }
+        #endregion
+
         #region OnTextChanged
         long revisionId;
 
@@ -80,11 +100,6 @@ namespace DotNetKit.Windows.Controls
                 }
             }
             return count;
-        }
-
-        Func<object, bool> GetFilter(string query)
-        {
-            return item => TextFromItem(item).Contains(query);
         }
 
         bool SeemsBackspacing(string text, int count)
@@ -123,7 +138,8 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
-                var filter = GetFilter(text);
+                var setting = Setting ?? AutoCompleteComboBoxSetting.Default;
+                var filter = setting.GetFilter(text, TextFromItem);
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, SuggestionThreshold);
 
                 if (count >= SuggestionThreshold) return;
