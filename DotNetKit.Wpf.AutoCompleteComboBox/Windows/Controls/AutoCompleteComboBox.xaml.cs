@@ -40,11 +40,6 @@ namespace DotNetKit.Windows.Controls
             }
         }
 
-        TimeSpan ResponseDelay
-        {
-            get { return TimeSpan.FromMilliseconds(500.0); }
-        }
-
         /// <summary>
         /// Gets text to match with the query from an item.
         /// Never null.
@@ -77,6 +72,11 @@ namespace DotNetKit.Windows.Controls
         {
             get { return (AutoCompleteComboBoxSetting)GetValue(SettingProperty); }
             set { SetValue(SettingProperty, value); }
+        }
+
+        AutoCompleteComboBoxSetting SettingOrDefault
+        {
+            get { return Setting ?? AutoCompleteComboBoxSetting.Default; }
         }
         #endregion
 
@@ -133,7 +133,7 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
-                var setting = Setting ?? AutoCompleteComboBoxSetting.Default;
+                var setting = SettingOrDefault;
                 var filter = setting.GetFilter(text, TextFromItem);
                 var maxCount = setting.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
@@ -154,6 +154,13 @@ namespace DotNetKit.Windows.Controls
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             var id = unchecked(++revisionId);
+            var setting = SettingOrDefault;
+
+            if (setting.Delay <= TimeSpan.Zero)
+            {
+                UpdateSuggestionList();
+                return;
+            }
 
             disposable.Content =
                 new Timer(
@@ -166,7 +173,7 @@ namespace DotNetKit.Windows.Controls
                         });
                     },
                     null,
-                    ResponseDelay,
+                    setting.Delay,
                     Timeout.InfiniteTimeSpan
                 );
         }

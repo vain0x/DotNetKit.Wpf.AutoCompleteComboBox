@@ -33,6 +33,13 @@ namespace DotNetKit.Windows.Controls
         /// </summary>
         public abstract int MaxSuggestionCount { get; }
 
+        /// <summary>
+        /// Gets the duration to delay updating the suggestion list.
+        /// Returns <c>Zero</c> if no delay.
+        /// Default: 300ms.
+        /// </summary>
+        public abstract TimeSpan Delay { get; }
+
         #region Default
         /// <summary>
         /// Provides a default implementation of <see cref="AutoCompleteComboBoxSetting"/>.
@@ -63,6 +70,14 @@ namespace DotNetKit.Windows.Controls
             public override int MaxSuggestionCount
             {
                 get { return 100; }
+            }
+
+            /// <summary>
+            /// Gets the default delay.
+            /// </summary>
+            public override TimeSpan Delay
+            {
+                get { return TimeSpan.FromMilliseconds(300.0); }
             }
         }
 
