@@ -16,7 +16,9 @@
             <DataTemplate DataType="{x:Type local:Person}">
                 <StackPanel>
                     <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                    <TextBlock Text="Some description." />
+                    <TextBlock>
+                        Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
+                    </TextBlock>
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
