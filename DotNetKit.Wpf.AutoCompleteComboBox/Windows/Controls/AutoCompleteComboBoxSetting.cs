@@ -29,8 +29,8 @@ namespace DotNetKit.Windows.Controls
         {
             return
                 item =>
-                    stringFromItem(item).ToLowerInvariant()
-                    .Contains(query.ToLowerInvariant());
+                    stringFromItem(item)
+                    .IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
         /// <summary>
