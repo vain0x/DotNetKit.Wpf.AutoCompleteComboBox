@@ -5,11 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
+    xmlns:local="clr-namespace:DotNetKit.Demo.Data"
     mc:Ignorable="d"
     Title="DotNetKit.Wpf.AutoCompleteComboBox Demo"
     Width="525"
     Height="350"
     >
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type local:Person}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                    <TextBlock Text="Some description." />
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <StackPanel>
         <GroupBox Header="Status">
             <Grid>
@@ -32,7 +44,6 @@
         </GroupBox>
 
         <dotNetKitControls:AutoCompleteComboBox
-            DisplayMemberPath="Name"
             SelectedValuePath="Id"
             TextSearch.TextPath="Name"
             ItemsSource="{Binding Items}"
