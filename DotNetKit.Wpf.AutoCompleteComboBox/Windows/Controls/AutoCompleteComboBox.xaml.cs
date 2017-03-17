@@ -118,13 +118,12 @@ namespace DotNetKit.Windows.Controls
             if (string.IsNullOrEmpty(text))
             {
                 IsDropDownOpen = false;
+                SelectedItem = null;
 
                 using (Items.DeferRefresh())
                 {
                     Items.Filter = null;
                 }
-
-                SelectedItem = null;
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
             {
