@@ -39,7 +39,7 @@ Note that:
 ### Configuration
 This library works fine in the default setting, however, it also provides how to configure.
 
-- Define a class derived from [DotNetKit.Windows.Controls.AutoCompleteComboBoxSetting](DotNetKit.Wpf.AutoCompleteComboBox\Windows\Controls\AutoCompleteComboBoxSetting.cs) to override some of properties.
+- Define a class derived from [DotNetKit.Windows.Controls.AutoCompleteComboBoxSetting](DotNetKit.Wpf.AutoCompleteComboBox/Windows/Controls/AutoCompleteComboBoxSetting.cs) to override some of properties.
 - Set the instance to ``AutoCompleteComboBox.Setting`` property.
 
 ```xml
