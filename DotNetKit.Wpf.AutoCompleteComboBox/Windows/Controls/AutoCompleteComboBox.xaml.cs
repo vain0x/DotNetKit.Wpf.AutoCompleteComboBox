@@ -50,9 +50,19 @@ namespace DotNetKit.Windows.Controls
             get { return 100; }
         }
 
+        /// <summary>
+        /// Gets text to match with the query from an item.
+        /// Never null.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         string TextFromItem(object item)
         {
-            return item == null ? "" : item.ToString();
+            if (item == null) return "";
+
+            var d = new DependencyVariable<string>();
+            d.SetBinding(item, TextSearch.GetTextPath(this));
+            return d.Value ?? "";
         }
 
         #region OnTextChanged

@@ -50,6 +50,7 @@
     <Compile Include="Windows\Controls\AutoCompleteComboBox.xaml.cs">
       <DependentUpon>AutoCompleteComboBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\DependencyVariable.cs" />
     <Compile Include="Windows\Media\VisualTreeModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
