@@ -15,7 +15,7 @@ namespace DotNetKit.Windows.Controls
         /// Gets a filter function which determines whether items should be suggested or not
         /// for the specified query.
         /// Default: Gets the filter which maps an item to <c>true</c>
-        /// if its text contains the query (case insensitive, ignoring surrounding spaces).
+        /// if its text contains the query (case insensitive).
         /// </summary>
         /// <param name="query">
         /// The string input by user.
