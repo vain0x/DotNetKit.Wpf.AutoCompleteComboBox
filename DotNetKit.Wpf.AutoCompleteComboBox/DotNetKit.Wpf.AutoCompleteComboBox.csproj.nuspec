@@ -8,7 +8,7 @@
     <projectUrl>https://github.com/DotNetKit/DotNetKit.Wpf.AutoCompleteComboBox</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <description>
-      Provides a lightweight auto-complete combobox.
+      Provides a lightweight combobox with filtering (auto-complete).
     </description>
   </metadata>
   <files>

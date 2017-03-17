@@ -1,5 +1,5 @@
 # AutoCompleteComboBox for WPF
-Provides a lightweight auto-complete combobox.
+Provides a lightweight combobox with filtering (auto-complete).
 
 ## Screenshot
 ![](documents/images/screenshot.gif)
