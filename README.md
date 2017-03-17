@@ -16,7 +16,7 @@ Declare XML namespace.
     ... >
 ```
 
-Then you can use `AutoCompleteComboBox` like a normal `ComboBox` (because of inheritance).
+Then you can use `AutoCompleteComboBox`. It's like a normal `ComboBox` because of inheritance.
 
 ```xml
 <dotNetKitControls:AutoCompleteComboBox
