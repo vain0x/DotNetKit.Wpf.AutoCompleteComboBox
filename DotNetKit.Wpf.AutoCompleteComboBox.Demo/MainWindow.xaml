@@ -4,8 +4,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
     mc:Ignorable="d"
-    Title="MainWindow"
+    Title="DotNetKit.Wpf.AutoCompleteComboBox Demo"
     Width="525"
     Height="350"
-    />
+    >
+    <StackPanel>
+        <GroupBox Header="Status">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="SelectedItem:" />
+                <TextBlock Grid.Column="1" Text="{Binding SelectedItem}" />
+
+                <TextBlock Grid.Row="1" Text="SelectedValue:" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedValue}" />
+            </Grid>
+        </GroupBox>
+
+        <dotNetKitControls:AutoCompleteComboBox
+            DisplayMemberPath="Name"
+            SelectedValuePath="Id"
+            TextSearch.TextPath="Name"
+            ItemsSource="{Binding Items}"
+            SelectedItem="{Binding SelectedItem}"
+            SelectedValue="{Binding SelectedValue}"
+            />
+    </StackPanel>
+</Window>
