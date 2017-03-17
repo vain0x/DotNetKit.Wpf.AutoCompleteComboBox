@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>DotNetKit.Wpf.AutoCompleteComboBox</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <authors>vain0</authors>
     <language>en-US</language>
     <projectUrl>https://github.com/DotNetKit/DotNetKit.Wpf.AutoCompleteComboBox</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <description>
-      Provides a lightweight auto-complete combobox.
+      Provides a lightweight combobox with filtering (auto-complete).
     </description>
   </metadata>
   <files>

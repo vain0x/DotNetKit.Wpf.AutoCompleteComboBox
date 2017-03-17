@@ -29,8 +29,8 @@ namespace DotNetKit.Windows.Controls
         {
             return
                 item =>
-                    stringFromItem(item).ToLowerInvariant()
-                    .Contains(query.ToLowerInvariant());
+                    stringFromItem(item)
+                    .IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace DotNetKit.Windows.Controls
             get { return TimeSpan.FromMilliseconds(300.0); }
         }
 
-        static readonly AutoCompleteComboBoxSetting @default =
+        static AutoCompleteComboBoxSetting @default =
             new AutoCompleteComboBoxSetting();
 
         /// <summary>
@@ -64,6 +64,11 @@ namespace DotNetKit.Windows.Controls
         public static AutoCompleteComboBoxSetting Default
         {
             get { return @default; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                @default = value;
+            }
         }
     }
 }
