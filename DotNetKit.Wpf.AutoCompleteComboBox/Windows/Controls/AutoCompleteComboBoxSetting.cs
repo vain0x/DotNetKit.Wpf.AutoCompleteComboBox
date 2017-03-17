@@ -25,6 +25,14 @@ namespace DotNetKit.Windows.Controls
         public abstract Func<object, bool>
             GetFilter(string query, Func<object, string> stringFromItem);
 
+        /// <summary>
+        /// Gets an integer.
+        /// As long as sthe number of suggested items is less than the value,
+        /// this opens the drop down.
+        /// Note that the value is larger, it's heavier to open the drop down.
+        /// </summary>
+        public abstract int MaxSuggestionCount { get; }
+
         #region Default
         /// <summary>
         /// Provides a default implementation of <see cref="AutoCompleteComboBoxSetting"/>.
@@ -47,6 +55,14 @@ namespace DotNetKit.Windows.Controls
                     item =>
                         stringFromItem(item).ToLowerInvariant()
                         .Contains(query.ToLowerInvariant());
+            }
+
+            /// <summary>
+            /// Gets 100.
+            /// </summary>
+            public override int MaxSuggestionCount
+            {
+                get { return 100; }
             }
         }
 

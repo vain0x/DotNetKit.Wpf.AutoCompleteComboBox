@@ -45,11 +45,6 @@ namespace DotNetKit.Windows.Controls
             get { return TimeSpan.FromMilliseconds(500.0); }
         }
 
-        int SuggestionThreshold
-        {
-            get { return 100; }
-        }
-
         /// <summary>
         /// Gets text to match with the query from an item.
         /// Never null.
@@ -140,9 +135,10 @@ namespace DotNetKit.Windows.Controls
             {
                 var setting = Setting ?? AutoCompleteComboBoxSetting.Default;
                 var filter = setting.GetFilter(text, TextFromItem);
-                var count = CountWithMax(ItemsSource.Cast<object>(), filter, SuggestionThreshold);
+                var maxCount = setting.MaxSuggestionCount;
+                var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
-                if (count >= SuggestionThreshold) return;
+                if (count > maxCount) return;
                 if (SeemsBackspacing(text, count)) return;
 
                 using (Items.DeferRefresh())
