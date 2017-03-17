@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace DotNetKit.Windows.Media
 {
-    public static class VisualTreeModule
+    static class VisualTreeModule
     {
         public static FrameworkElement FindChild(DependencyObject obj, string childName)
         {
