@@ -31,7 +31,7 @@ Then you can use `AutoCompleteComboBox`. It's like a normal `ComboBox` because o
 Note that:
 
 - Set a property path to ``TextSearch.TextPath`` property.
-    - The path leads to a property whose getter produces a string value to identify items. For example, assume each item is an instance of `Person`, which has `Name` property, and the property path is "Name". If the user input "va", the combobox filters the items to remove ones (persons) whose `Name` doesn't contains "va".
+    - The path leads to a property whose getter produces a string value to identify items. For example, assume each item is an instance of `Person`, which has `Name` property, and the property path is "Name". If the user input "va", the combobox filters the items to remove ones (persons) whose `Name` don't contain "va".
     - No support for ``TextSeach.Text``.
 - Don't use ``ComboBox.Items`` property directly. Use `ItemsSource` instead.
 - Although the Demo project uses DataTemplate to display items, you can also use `DisplayMemberPath`.
