@@ -11,6 +11,21 @@
     Width="525"
     Height="350"
     >
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- This style applies to all auto-complete comboboxes in the window by default. -->
+            <Style TargetType="dotNetKitControls:AutoCompleteComboBox">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <StackPanel>
         <GroupBox Header="Status">
             <Grid>
