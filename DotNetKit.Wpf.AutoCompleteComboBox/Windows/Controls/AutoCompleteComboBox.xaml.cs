@@ -103,7 +103,7 @@ namespace DotNetKit.Windows.Controls
             return
                 count == 1
                 && SelectedItem != null
-                && TextFromItem(SelectedItem) != text;
+                && TextFromItem(SelectedItem).StartsWith(text);
         }
 
         void Unselect()
