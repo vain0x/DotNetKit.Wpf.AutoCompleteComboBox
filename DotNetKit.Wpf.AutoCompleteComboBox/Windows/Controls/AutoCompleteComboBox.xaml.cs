@@ -82,6 +82,7 @@ namespace DotNetKit.Windows.Controls
 
         #region OnTextChanged
         long revisionId;
+        string previousText;
 
         static int CountWithMax<X>(IEnumerable<X> xs, Func<X, bool> predicate, int maxCount)
         {
@@ -111,13 +112,21 @@ namespace DotNetKit.Windows.Controls
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void OpenDropDown(Func<object, bool> filter)
+        void UpdateFilter(string text, Func<object, bool> filter)
         {
             using (Items.DeferRefresh())
             {
+                // Can empty the text box. I don't why.
                 Items.Filter = item => filter(item);
             }
 
+            // Preserve the text. This can cause an infinite loop.
+            Text = text;
+        }
+
+        void OpenDropDown(string text, Func<object, bool> filter)
+        {
+            UpdateFilter(text, filter);
             IsDropDownOpen = true;
             Unselect();
         }
@@ -125,13 +134,17 @@ namespace DotNetKit.Windows.Controls
         void OpenDropDown()
         {
             var setting = SettingOrDefault;
-            var filter = setting.GetFilter(Text, TextFromItem);
-            OpenDropDown(filter);
+            var text = Text;
+            var filter = setting.GetFilter(text, TextFromItem);
+            OpenDropDown(text, filter);
         }
 
         void UpdateSuggestionList()
         {
             var text = Text;
+
+            if (text == previousText) return;
+            previousText = text;
 
             if (string.IsNullOrEmpty(text))
             {
@@ -158,7 +171,7 @@ namespace DotNetKit.Windows.Controls
                 if (count > maxCount) return;
                 if (SeemsBackspacing(text, count)) return;
 
-                OpenDropDown(filter);
+                OpenDropDown(text, filter);
             }
         }
 
