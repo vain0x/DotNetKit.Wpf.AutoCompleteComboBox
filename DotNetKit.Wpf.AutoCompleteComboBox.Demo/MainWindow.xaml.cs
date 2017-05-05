@@ -52,11 +52,9 @@ namespace DotNetKit.Demo
                 set { SetField(ref selectedItem, value); }
             }
 
-            long? selectedValue;
-            public long? SelectedValue
+            public ViewModel()
             {
-                get { return selectedValue; }
-                set { SetField(ref selectedValue, value); }
+                SelectedItem = Items.First();
             }
         }
 
@@ -65,6 +63,10 @@ namespace DotNetKit.Demo
             InitializeComponent();
 
             DataContext = new ViewModel();
+        }
+
+        void AutoCompleteComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
         }
     }
 }

@@ -11,19 +11,6 @@
     Width="525"
     Height="350"
     >
-    <Window.Resources>
-        <ResourceDictionary>
-            <DataTemplate DataType="{x:Type local:Person}">
-                <StackPanel>
-                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                    <TextBlock>
-                        Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
-                    </TextBlock>
-                </StackPanel>
-            </DataTemplate>
-        </ResourceDictionary>
-    </Window.Resources>
-
     <StackPanel>
         <GroupBox Header="Status">
             <Grid>
@@ -39,18 +26,15 @@
 
                 <TextBlock Text="SelectedItem: " />
                 <TextBlock Grid.Column="1" Text="{Binding SelectedItem}" />
-
-                <TextBlock Grid.Row="1" Text="SelectedValue: " />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedValue}" />
             </Grid>
         </GroupBox>
 
         <dotNetKitControls:AutoCompleteComboBox
-            SelectedValuePath="Id"
+            DisplayMemberPath="Name"
             TextSearch.TextPath="Name"
             ItemsSource="{Binding Items}"
             SelectedItem="{Binding SelectedItem}"
-            SelectedValue="{Binding SelectedValue}"
+            SelectionChanged="AutoCompleteComboBox_SelectionChanged"
             />
     </StackPanel>
 </Window>
