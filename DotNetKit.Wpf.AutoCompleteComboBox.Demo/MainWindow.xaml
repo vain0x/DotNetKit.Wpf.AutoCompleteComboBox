@@ -13,14 +13,16 @@
     >
     <Window.Resources>
         <ResourceDictionary>
-            <DataTemplate DataType="{x:Type local:Person}">
-                <StackPanel>
-                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                    <TextBlock>
-                        Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
-                    </TextBlock>
-                </StackPanel>
-            </DataTemplate>
+            <!-- This style applies to all auto-complete comboboxes in the window by default. -->
+            <Style TargetType="dotNetKitControls:AutoCompleteComboBox">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -51,6 +53,17 @@
             ItemsSource="{Binding Items}"
             SelectedItem="{Binding SelectedItem}"
             SelectedValue="{Binding SelectedValue}"
-            />
+            >
+            <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                        <TextBlock>
+                            Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+        </dotNetKitControls:AutoCompleteComboBox>
     </StackPanel>
 </Window>

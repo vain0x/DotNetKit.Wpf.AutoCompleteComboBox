@@ -50,3 +50,22 @@ This library works fine in the default setting, however, it also provides how to
 ```
 
 - Or set to ``AutoCompleteComboBoxSetting.Default`` to apply to all comboboxes.
+
+### Performance
+Filtering allows you to add a lot of items to a combobox without loss of usability, however, that makes the performance poor. To get rid of the issue, we recommend you to use `VirtualizingStackPanel` as the panel.
+
+Use `ItemsPanel` property:
+
+```csharp
+<dotNetKitControls:AutoCompleteComboBox ...>
+    <dotNetKitControls:AutoCompleteComboBox.ItemsPanel>
+        <ItemsPanelTemplate>
+            <VirtualizingStackPanel />
+        </ItemsPanelTemplate>
+    </dotNetKitControls:AutoCompleteComboBox.ItemsPanel>
+</dotNetKitControls:AutoCompleteComboBox>
+```
+
+or declare a style in resources as the Demo app does.
+
+See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](http://vbcity.com/blogs/xtab/archive/2009/12/15/wpf-using-a-virtualizingstackpanel-to-improve-combobox-performance.aspx) for more detailed explanation.
