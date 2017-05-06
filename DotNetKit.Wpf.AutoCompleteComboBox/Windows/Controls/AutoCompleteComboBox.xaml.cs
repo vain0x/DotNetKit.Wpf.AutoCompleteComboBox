@@ -183,6 +183,11 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
+                using (new TextBoxStatePreserver(EditableTextBox))
+                {
+                    SelectedItem = null;
+                }
+
                 var setting = SettingOrDefault;
                 var filter = setting.GetFilter(text, TextFromItem);
                 var maxCount = setting.MaxSuggestionCount;
