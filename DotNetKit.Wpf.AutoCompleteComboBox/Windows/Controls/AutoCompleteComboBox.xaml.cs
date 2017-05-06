@@ -121,14 +121,6 @@ namespace DotNetKit.Windows.Controls
             return count;
         }
 
-        bool SeemsBackspacing(string text, int count)
-        {
-            return
-                count == 1
-                && SelectedItem != null
-                && TextFromItem(SelectedItem).StartsWith(text);
-        }
-
         void Unselect()
         {
             var textBox = EditableTextBox;
@@ -194,7 +186,6 @@ namespace DotNetKit.Windows.Controls
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
-                if (SeemsBackspacing(text, count)) return;
 
                 OpenDropDown(filter);
             }
