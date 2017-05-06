@@ -82,6 +82,30 @@ namespace DotNetKit.Windows.Controls
 
         #region OnTextChanged
         long revisionId;
+        string previousText;
+
+        struct TextBoxStatePreserver
+            : IDisposable
+        {
+            readonly TextBox textBox;
+            readonly int selectionStart;
+            readonly int selectionLength;
+            readonly string text;
+
+            public void Dispose()
+            {
+                textBox.Text = text;
+                textBox.Select(selectionStart, selectionLength);
+            }
+
+            public TextBoxStatePreserver(TextBox textBox)
+            {
+                this.textBox = textBox;
+                selectionStart = textBox.SelectionStart;
+                selectionLength = textBox.SelectionLength;
+                text = textBox.Text;
+            }
+        }
 
         static int CountWithMax<X>(IEnumerable<X> xs, Func<X, bool> predicate, int maxCount)
         {
@@ -97,27 +121,25 @@ namespace DotNetKit.Windows.Controls
             return count;
         }
 
-        bool SeemsBackspacing(string text, int count)
-        {
-            return
-                count == 1
-                && SelectedItem != null
-                && TextFromItem(SelectedItem) != text;
-        }
-
         void Unselect()
         {
             var textBox = EditableTextBox;
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void OpenDropDown(Func<object, bool> filter)
+        void UpdateFilter(Func<object, bool> filter)
         {
+            using (new TextBoxStatePreserver(EditableTextBox))
             using (Items.DeferRefresh())
             {
+                // Can empty the text box. I don't why.
                 Items.Filter = item => filter(item);
             }
+        }
 
+        void OpenDropDown(Func<object, bool> filter)
+        {
+            UpdateFilter(filter);
             IsDropDownOpen = true;
             Unselect();
         }
@@ -132,6 +154,9 @@ namespace DotNetKit.Windows.Controls
         void UpdateSuggestionList()
         {
             var text = Text;
+
+            if (text == previousText) return;
+            previousText = text;
 
             if (string.IsNullOrEmpty(text))
             {
@@ -150,13 +175,17 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
+                using (new TextBoxStatePreserver(EditableTextBox))
+                {
+                    SelectedItem = null;
+                }
+
                 var setting = SettingOrDefault;
                 var filter = setting.GetFilter(text, TextFromItem);
                 var maxCount = setting.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
-                if (SeemsBackspacing(text, count)) return;
 
                 OpenDropDown(filter);
             }
