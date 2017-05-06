@@ -121,14 +121,6 @@ namespace DotNetKit.Windows.Controls
             return count;
         }
 
-        bool SeemsBackspacing(string text, int count)
-        {
-            return
-                count == 1
-                && SelectedItem != null
-                && TextFromItem(SelectedItem).StartsWith(text);
-        }
-
         void Unselect()
         {
             var textBox = EditableTextBox;
@@ -183,13 +175,17 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
+                using (new TextBoxStatePreserver(EditableTextBox))
+                {
+                    SelectedItem = null;
+                }
+
                 var setting = SettingOrDefault;
                 var filter = setting.GetFilter(text, TextFromItem);
                 var maxCount = setting.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
-                if (SeemsBackspacing(text, count)) return;
 
                 OpenDropDown(filter);
             }
