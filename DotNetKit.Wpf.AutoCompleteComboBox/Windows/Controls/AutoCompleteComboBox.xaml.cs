@@ -151,7 +151,7 @@ namespace DotNetKit.Windows.Controls
             OpenDropDown(filter);
         }
 
-        void UpdateSuggestionList()
+        void OnTextChangedCore()
         {
             var text = Text;
 
@@ -198,7 +198,7 @@ namespace DotNetKit.Windows.Controls
 
             if (setting.Delay <= TimeSpan.Zero)
             {
-                UpdateSuggestionList();
+                OnTextChangedCore();
                 return;
             }
 
@@ -209,7 +209,7 @@ namespace DotNetKit.Windows.Controls
                         Dispatcher.InvokeAsync(() =>
                         {
                             if (revisionId != id) return;
-                            UpdateSuggestionList();
+                            OnTextChangedCore();
                         });
                     },
                     null,
