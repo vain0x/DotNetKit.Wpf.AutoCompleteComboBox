@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,18 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DotNetKit.Demo.Data;
 
-namespace DotNetKit.Demo
+namespace DotNetKit.Demo.Samples.PracticalSample
 {
     /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
+    /// PracticalSampleControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PracticalSampleControl : UserControl
     {
-        public MainWindow()
+        public PracticalSampleControl()
         {
             InitializeComponent();
+
+            DataContext = new PracticalSample();
         }
     }
 }

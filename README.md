@@ -1,8 +1,18 @@
 # AutoCompleteComboBox for WPF
 Provides a lightweight combobox with filtering (auto-complete).
 
-## Screenshot
+## Demo
 ![](documents/images/screenshot.gif)
+
+[Download samples.](https://github.com/DotNetKit/DotNetKit.Wpf.AutoCompleteComboBox/archive/master.zip) The Demo project in the repository is a set of samples.
+
+- MainWindow:
+    - A hub of samples. Each tab page represents an independent sample.
+- Practical Sample:
+    - Demonstrates how to:
+        - specify properties (e.g. SelectedItem, ``TextSearch.TextPath``) and
+        - change the underlying panel to a VirtualizingStackPanel using an "implicit" style (see below for details).
+    - You can experience how the combobox with a large number of items works.
 
 ## Usage
 [Install via NuGet](https://www.nuget.org/packages/DotNetKit.Wpf.AutoCompleteComboBox).
@@ -66,6 +76,6 @@ Use `ItemsPanel` property:
 </dotNetKitControls:AutoCompleteComboBox>
 ```
 
-or declare a style in resources as the Demo app does.
+or declare a style in resources as the "Practical Sample" does (see the Demo section).
 
 See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](http://vbcity.com/blogs/xtab/archive/2009/12/15/wpf-using-a-virtualizingstackpanel-to-improve-combobox-performance.aspx) for more detailed explanation.

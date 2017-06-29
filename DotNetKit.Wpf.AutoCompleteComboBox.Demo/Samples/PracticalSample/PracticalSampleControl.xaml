@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="DotNetKit.Demo.Samples.PracticalSample.PracticalSampleControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
+    xmlns:local="clr-namespace:DotNetKit.Demo.Samples.PracticalSample"
+    mc:Ignorable="d" 
+    d:DesignWidth="300"
+    d:DesignHeight="300"
+    >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- This style applies to all auto-complete comboboxes in the window by default. -->
+            <Style TargetType="dotNetKitControls:AutoCompleteComboBox">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <GroupBox Header="Status">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="SelectedItem: " />
+                <TextBlock Grid.Column="1" Text="{Binding SelectedItem}" />
+
+                <TextBlock Grid.Row="1" Text="SelectedValue: " />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedValue}" />
+            </Grid>
+        </GroupBox>
+
+        <dotNetKitControls:AutoCompleteComboBox
+            SelectedValuePath="Id"
+            TextSearch.TextPath="Name"
+            ItemsSource="{Binding Items}"
+            SelectedItem="{Binding SelectedItem}"
+            SelectedValue="{Binding SelectedValue}"
+            >
+            <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                        <TextBlock>
+                            Some descriptions. Id = <Run Text="{Binding Id, Mode=OneTime}" />.
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+        </dotNetKitControls:AutoCompleteComboBox>
+    </StackPanel>
+</UserControl>
