@@ -29,13 +29,10 @@ namespace DotNetKit.Demo.Samples.PracticalSample
         }
         #endregion
 
-        public IReadOnlyList<Person> Items
-        {
-            get { return PersonModule.All; }
-        }
+        public IReadOnlyList<PersonItem> Items { get; private set; }
 
-        Person selectedItem;
-        public Person SelectedItem
+        PersonItem selectedItem;
+        public PersonItem SelectedItem
         {
             get { return selectedItem; }
             set { SetField(ref selectedItem, value); }
@@ -46,6 +43,51 @@ namespace DotNetKit.Demo.Samples.PracticalSample
         {
             get { return selectedValue; }
             set { SetField(ref selectedValue, value); }
+        }
+
+        public PracticalSample()
+        {
+            Items = PersonModule.All.Select(p => new PersonItem(p)).ToArray();
+        }
+    }
+
+    public class PersonItem
+        : INotifyPropertyChanged
+    {
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void SetField<X>(ref X field, X value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<X>.Default.Equals(field, value)) return;
+
+            field = value;
+
+            var h = PropertyChanged;
+            if (h != null) h(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        readonly Person person;
+
+        public long Id => person.Id;
+        public string Name => person.Name;
+
+        double priority;
+        public double Priority
+        {
+            get { return priority; }
+            set { SetField(ref priority, value); }
+        }
+
+        public override string ToString()
+        {
+            return person.ToString();
+        }
+
+        public PersonItem(Person person)
+        {
+            this.person = person;
         }
     }
 }

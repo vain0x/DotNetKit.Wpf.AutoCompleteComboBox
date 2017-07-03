@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:sortDescriptions="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
     xmlns:local="clr-namespace:DotNetKit.Demo.Samples.PracticalSample"
     mc:Ignorable="d" 
@@ -22,6 +23,12 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <CollectionViewSource x:Key="ItemsCollectionView" Source="{Binding Items}">
+                <CollectionViewSource.SortDescriptions>
+                    <sortDescriptions:SortDescription PropertyName="Priority" />
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -47,9 +54,10 @@
         </GroupBox>
 
         <dotNetKitControls:AutoCompleteComboBox
+            x:Name="comboBox"
             SelectedValuePath="Id"
             TextSearch.TextPath="Name"
-            ItemsSource="{Binding Items}"
+            ItemsSource="{Binding Source={StaticResource ItemsCollectionView}}"
             SelectedItem="{Binding SelectedItem}"
             SelectedValue="{Binding SelectedValue}"
             >

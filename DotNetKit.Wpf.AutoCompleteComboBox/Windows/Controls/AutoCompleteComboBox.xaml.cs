@@ -55,6 +55,8 @@ namespace DotNetKit.Windows.Controls
             return d.Value ?? "";
         }
 
+        public event EventHandler<string> SuggestionsUpdating;
+
         #region Setting
         static readonly DependencyProperty settingProperty =
             DependencyProperty.Register(
@@ -186,6 +188,8 @@ namespace DotNetKit.Windows.Controls
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
+
+                SuggestionsUpdating?.Invoke(this, text);
 
                 OpenDropDown(filter);
             }

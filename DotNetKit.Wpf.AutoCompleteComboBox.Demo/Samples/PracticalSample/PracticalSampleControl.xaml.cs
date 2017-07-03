@@ -25,6 +25,16 @@ namespace DotNetKit.Demo.Samples.PracticalSample
             InitializeComponent();
 
             DataContext = new PracticalSample();
+
+            comboBox.SuggestionsUpdating += (sender, query) =>
+            {
+                foreach (var item in ((PracticalSample)DataContext).Items)
+                {
+                    item.Priority =
+                        item.Name.StartsWith(query) ? 0 :
+                        item.Name.Contains(query) ? 1 : 2;
+                }
+            };
         }
     }
 }
