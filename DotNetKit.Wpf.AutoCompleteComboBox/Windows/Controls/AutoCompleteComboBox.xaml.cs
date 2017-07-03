@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,6 +108,31 @@ namespace DotNetKit.Windows.Controls
             }
         }
 
+        static double Priority(string text, string query)
+        {
+            if (text.StartsWith(query))
+            {
+                return 3;
+            }
+
+            if (text.StartsWith(query, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return 2;
+            }
+
+            if (text.Contains(query))
+            {
+                return 1;
+            }
+
+            if (text.IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0)
+            {
+                return 0;
+            }
+
+            return -1;
+        }
+
         static int CountWithMax<X>(IEnumerable<X> xs, Func<X, bool> predicate, int maxCount)
         {
             var count = 0;
@@ -183,9 +209,24 @@ namespace DotNetKit.Windows.Controls
                 var setting = SettingOrDefault;
                 var filter = setting.GetFilter(text, TextFromItem);
                 var maxCount = setting.MaxSuggestionCount;
-                var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
+                var itemsSource = ItemsSource;
+                var count = CountWithMax(itemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
+
+                var list = itemsSource as IList;
+                if (list != null && !list.IsReadOnly && !list.IsFixedSize)
+                {
+                    ItemsSource = null;
+
+                    var array = list.Cast<object>().OrderByDescending(item => Priority(TextFromItem(item), text)).ToArray();
+                    list.Clear();
+                    foreach (var x in array)
+                    {
+                        list.Add(x);
+                    }
+                    ItemsSource = list;
+                }
 
                 OpenDropDown(filter);
             }

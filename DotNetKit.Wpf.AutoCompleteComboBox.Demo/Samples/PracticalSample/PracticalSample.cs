@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -29,10 +30,7 @@ namespace DotNetKit.Demo.Samples.PracticalSample
         }
         #endregion
 
-        public IReadOnlyList<Person> Items
-        {
-            get { return PersonModule.All; }
-        }
+        public ObservableCollection<Person> Items { get; private set; }
 
         Person selectedItem;
         public Person SelectedItem
@@ -46,6 +44,11 @@ namespace DotNetKit.Demo.Samples.PracticalSample
         {
             get { return selectedValue; }
             set { SetField(ref selectedValue, value); }
+        }
+
+        public PracticalSample()
+        {
+            Items = new ObservableCollection<Person>(PersonModule.All);
         }
     }
 }
