@@ -2083,7 +2083,7 @@ Zulma Avent
 ";
 
         static readonly IReadOnlyList<Person> allPersons =
-            source.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+            source.Split(new[] { Environment.NewLine , "\n" }, StringSplitOptions.RemoveEmptyEntries)
             .Select((name, i) => new Person(i + 1L, name))
             .ToArray();
 
