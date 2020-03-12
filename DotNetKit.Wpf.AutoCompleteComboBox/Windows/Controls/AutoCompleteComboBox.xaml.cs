@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +20,7 @@ using DotNetKit.Windows.Media;
 namespace DotNetKit.Windows.Controls
 {
     /// <summary>
-    /// AutoCompleteComboBox.xaml の相互作用ロジック
+    /// AutoCompleteComboBox.xaml
     /// </summary>
     public partial class AutoCompleteComboBox : ComboBox
     {
