@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -19,7 +19,7 @@ using DotNetKit.Demo.Data;
 namespace DotNetKit.Demo
 {
     /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
+    /// MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
