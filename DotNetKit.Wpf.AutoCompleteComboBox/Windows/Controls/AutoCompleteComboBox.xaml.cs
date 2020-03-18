@@ -1,19 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections.Specialized;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
 
@@ -27,6 +20,9 @@ namespace DotNetKit.Windows.Controls
         readonly SerialDisposable disposable = new SerialDisposable();
 
         TextBox editableTextBoxCache;
+
+        Predicate<object> defaultItemsFilter;
+
         public TextBox EditableTextBox
         {
             get
@@ -44,15 +40,24 @@ namespace DotNetKit.Windows.Controls
         /// Gets text to match with the query from an item.
         /// Never null.
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item"/>
         string TextFromItem(object item)
         {
-            if (item == null) return "";
+            if (item == null) return string.Empty;
 
             var d = new DependencyVariable<string>();
             d.SetBinding(item, TextSearch.GetTextPath(this));
-            return d.Value ?? "";
+            return d.Value ?? string.Empty;
+        }
+
+        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+        {
+            base.OnItemsChanged(e);
+
+            if (defaultItemsFilter == null)
+            {
+                defaultItemsFilter = Items.Filter;
+            }
         }
 
         #region Setting
@@ -107,7 +112,7 @@ namespace DotNetKit.Windows.Controls
             }
         }
 
-        static int CountWithMax<X>(IEnumerable<X> xs, Func<X, bool> predicate, int maxCount)
+        static int CountWithMax<T>(IEnumerable<T> xs, Predicate<T> predicate, int maxCount)
         {
             var count = 0;
             foreach (var x in xs)
@@ -127,17 +132,17 @@ namespace DotNetKit.Windows.Controls
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void UpdateFilter(Func<object, bool> filter)
+        void UpdateFilter(Predicate<object> filter)
         {
             using (new TextBoxStatePreserver(EditableTextBox))
             using (Items.DeferRefresh())
             {
                 // Can empty the text box. I don't why.
-                Items.Filter = item => filter(item);
+                Items.Filter = filter;
             }
         }
 
-        void OpenDropDown(Func<object, bool> filter)
+        void OpenDropDown(Predicate<object> filter)
         {
             UpdateFilter(filter);
             IsDropDownOpen = true;
@@ -146,8 +151,7 @@ namespace DotNetKit.Windows.Controls
 
         void OpenDropDown()
         {
-            var setting = SettingOrDefault;
-            var filter = setting.GetFilter(Text, TextFromItem);
+            var filter = GetFilter();
             OpenDropDown(filter);
         }
 
@@ -165,7 +169,7 @@ namespace DotNetKit.Windows.Controls
 
                 using (Items.DeferRefresh())
                 {
-                    Items.Filter = null;
+                    Items.Filter = defaultItemsFilter;
                 }
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
@@ -180,9 +184,8 @@ namespace DotNetKit.Windows.Controls
                     SelectedItem = null;
                 }
 
-                var setting = SettingOrDefault;
-                var filter = setting.GetFilter(text, TextFromItem);
-                var maxCount = setting.MaxSuggestionCount;
+                var filter = GetFilter();
+                var maxCount = SettingOrDefault.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
@@ -228,14 +231,20 @@ namespace DotNetKit.Windows.Controls
             }
         }
 
+        Predicate<object> GetFilter()
+        {
+            var filter = SettingOrDefault.GetFilter(Text, TextFromItem);
+
+            return defaultItemsFilter != null
+                ? i => defaultItemsFilter(i) && filter(i)
+                : filter;
+        }
+
         public AutoCompleteComboBox()
         {
             InitializeComponent();
 
-            AddHandler(
-                TextBoxBase.TextChangedEvent,
-                new TextChangedEventHandler(OnTextChanged)
-            );
+            AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace DotNetKit.Windows.Controls
 {
@@ -24,13 +20,9 @@ namespace DotNetKit.Windows.Controls
         /// The function to get a string which identifies the specified item.
         /// </param>
         /// <returns></returns>
-        public virtual Func<object, bool>
-            GetFilter(string query, Func<object, string> stringFromItem)
+        public virtual Predicate<object> GetFilter(string query, Func<object, string> stringFromItem)
         {
-            return
-                item =>
-                    stringFromItem(item)
-                    .IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0;
+            return item => stringFromItem(item).IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
         /// <summary>
@@ -55,8 +47,7 @@ namespace DotNetKit.Windows.Controls
             get { return TimeSpan.FromMilliseconds(300.0); }
         }
 
-        static AutoCompleteComboBoxSetting @default =
-            new AutoCompleteComboBoxSetting();
+        static AutoCompleteComboBoxSetting @default = new AutoCompleteComboBoxSetting();
 
         /// <summary>
         /// Gets the default setting.
@@ -66,7 +57,7 @@ namespace DotNetKit.Windows.Controls
             get { return @default; }
             set
             {
-                if (value == null) throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException(nameof(value));
                 @default = value;
             }
         }
