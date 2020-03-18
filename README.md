@@ -1,4 +1,7 @@
 # AutoCompleteComboBox for WPF
+
+[![NuGet version](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox.svg)](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox)
+
 Provides a lightweight combobox with filtering (auto-complete).
 
 ## Screenshot
