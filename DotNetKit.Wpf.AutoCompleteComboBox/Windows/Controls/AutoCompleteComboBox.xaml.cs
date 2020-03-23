@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,14 +51,11 @@ namespace DotNetKit.Windows.Controls
             return d.Value ?? string.Empty;
         }
 
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
-            base.OnItemsChanged(e);
+            base.OnItemsSourceChanged(oldValue, newValue);
 
-            if (defaultItemsFilter == null)
-            {
-                defaultItemsFilter = Items.Filter;
-            }
+            defaultItemsFilter = newValue is ICollectionView cv ? cv.Filter : null;
         }
 
         #region Setting
