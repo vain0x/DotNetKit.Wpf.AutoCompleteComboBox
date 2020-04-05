@@ -11,9 +11,17 @@
     <projectUrl>https://github.com/DotNetKit/DotNetKit.Wpf.AutoCompleteComboBox</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <PackageTags>Wpf Combobox AutoComplete</PackageTags>
+    <PackageProjectUrl>https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
