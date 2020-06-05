@@ -184,7 +184,7 @@ namespace DotNetKit.Windows.Controls
 
                 var filter = GetFilter();
                 var maxCount = SettingOrDefault.MaxSuggestionCount;
-                var count = CountWithMax(ItemsSource.Cast<object>(), filter, maxCount);
+                var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
 
                 if (count > maxCount) return;
 
