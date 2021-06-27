@@ -156,6 +156,7 @@ namespace DotNetKit.Windows.Controls
         void UpdateSuggestionList()
         {
             var text = Text;
+            System.Diagnostics.Debug.WriteLine($"text={text}");
 
             if (text == previousText) return;
             previousText = text;

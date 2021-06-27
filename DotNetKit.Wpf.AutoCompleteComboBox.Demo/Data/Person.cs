@@ -10,16 +10,18 @@ namespace DotNetKit.Demo.Data
     {
         public long Id { get; private set; }
         public string Name { get; private set; }
+        public string Display { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("Person(Id = {0}, Name = {1})", Id, Name);
+            return string.Format("Person(Id = {0}, Name(TextPath) = {1}, Display = {2})", Id, Name, Display);
         }
 
         public Person(long id, string name)
         {
             Id = id;
-            Name = name;
+            Name = name.Split(' ')[0];
+            Display = name.Split(' ')[1];
         }
     }
 
