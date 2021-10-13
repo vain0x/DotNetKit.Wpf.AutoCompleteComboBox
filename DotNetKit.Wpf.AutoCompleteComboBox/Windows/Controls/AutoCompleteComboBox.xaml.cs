@@ -186,9 +186,10 @@ namespace DotNetKit.Windows.Controls
                 var maxCount = SettingOrDefault.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
 
-                if (count > maxCount) return;
-
-                OpenDropDown(filter);
+                if (0 < count && count <= maxCount)
+                {
+                    OpenDropDown(filter);
+                }
             }
         }
 
