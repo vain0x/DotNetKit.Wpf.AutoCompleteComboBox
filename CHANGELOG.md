@@ -4,6 +4,10 @@
 
 ----
 
+## 1.4.0 - 2021-10-17
+
+- [Don't show empty list · Issue #20](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/issues/20)
+
 ## 1.3.1 - 2020-03-18
 
 - [Fix filter regression by kvpt · Pull Request #12](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/12)
