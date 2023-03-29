@@ -8,7 +8,9 @@
     mc:Ignorable="d" 
     d:DesignWidth="300"
     d:DesignHeight="300"
+    x:Name="this"
     IsEditable="True"
     IsTextSearchEnabled="False"
     PreviewKeyDown="ComboBox_PreviewKeyDown"
+    ItemsSource="{Binding ElementName=this, Path=ItemsSource}"
     />

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +20,6 @@ namespace DotNetKit.Windows.Controls
         readonly SerialDisposable disposable = new SerialDisposable();
 
         TextBox editableTextBoxCache;
-
-        Predicate<object> defaultItemsFilter;
 
         public TextBox EditableTextBox
         {
@@ -51,12 +48,22 @@ namespace DotNetKit.Windows.Controls
             return d.Value ?? string.Empty;
         }
 
-        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+        #region ItemsSource
+        public static new readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
+                new PropertyMetadata(null));
+        public new IEnumerable ItemsSource
         {
-            base.OnItemsSourceChanged(oldValue, newValue);
-
-            defaultItemsFilter = newValue is ICollectionView cv ? cv.Filter : null;
+            get
+            {
+                return (IEnumerable)GetValue(ItemsSourceProperty);
+            }
+            set
+            {
+                SetValue(ItemsSourceProperty, value);
+            }
         }
+        #endregion ItemsSource
 
         #region Setting
         static readonly DependencyProperty settingProperty =
@@ -167,7 +174,7 @@ namespace DotNetKit.Windows.Controls
 
                 using (Items.DeferRefresh())
                 {
-                    Items.Filter = defaultItemsFilter;
+                    Items.Filter = null;
                 }
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
@@ -232,11 +239,7 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> GetFilter()
         {
-            var filter = SettingOrDefault.GetFilter(Text, TextFromItem);
-
-            return defaultItemsFilter != null
-                ? i => defaultItemsFilter(i) && filter(i)
-                : filter;
+            return SettingOrDefault.GetFilter(Text, TextFromItem);
         }
 
         public AutoCompleteComboBox()
