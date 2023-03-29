@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
@@ -51,7 +53,7 @@ namespace DotNetKit.Windows.Controls
         #region ItemsSource
         public static new readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
-                new PropertyMetadata(null));
+                new PropertyMetadata(null, ItemsSourcePropertyChanged));
         public new IEnumerable ItemsSource
         {
             get
@@ -61,6 +63,28 @@ namespace DotNetKit.Windows.Controls
             set
             {
                 SetValue(ItemsSourceProperty, value);
+            }
+        }
+
+        private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
+        {
+            if (dpcea.NewValue is ICollectionView cv)
+            {
+                //TODO: Not working yet
+                //CollectionViewSource newCollectionViewSource = new CollectionViewSource();
+                ////Binding sourceBinding = new Binding() { Source = cv };
+                ////BindingOperations.SetBinding(newCollectionViewSource, CollectionViewSource.SourceProperty, sourceBinding);
+                //newCollectionViewSource.Source = cv;
+                //((ComboBox)dependencyObject).ItemsSource = newCollectionViewSource.View;
+            }
+            else
+            {
+                IEnumerable newValue = dpcea.NewValue as IEnumerable;
+                CollectionViewSource newCollectionViewSource = new CollectionViewSource
+                {
+                    Source = newValue
+                };
+                ((ComboBox)dependencyObject).ItemsSource = newCollectionViewSource.View;
             }
         }
         #endregion ItemsSource

@@ -12,5 +12,4 @@
     IsEditable="True"
     IsTextSearchEnabled="False"
     PreviewKeyDown="ComboBox_PreviewKeyDown"
-    ItemsSource="{Binding ElementName=this, Path=ItemsSource}"
     />
