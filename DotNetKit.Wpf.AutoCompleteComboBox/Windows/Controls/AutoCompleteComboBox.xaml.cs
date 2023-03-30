@@ -23,6 +23,8 @@ namespace DotNetKit.Windows.Controls
 
         TextBox editableTextBoxCache;
 
+        Predicate<object> defaultItemsFilter;
+
         public TextBox EditableTextBox
         {
             get
@@ -70,12 +72,8 @@ namespace DotNetKit.Windows.Controls
         {
             if (dpcea.NewValue is ICollectionView cv)
             {
-                //TODO: Not working yet
-                //CollectionViewSource newCollectionViewSource = new CollectionViewSource();
-                ////Binding sourceBinding = new Binding() { Source = cv };
-                ////BindingOperations.SetBinding(newCollectionViewSource, CollectionViewSource.SourceProperty, sourceBinding);
-                //newCollectionViewSource.Source = cv;
-                //((ComboBox)dependencyObject).ItemsSource = newCollectionViewSource.View;
+                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
+                ((ComboBox)dependencyObject).ItemsSource = cv;
             }
             else
             {
@@ -198,7 +196,7 @@ namespace DotNetKit.Windows.Controls
 
                 using (Items.DeferRefresh())
                 {
-                    Items.Filter = null;
+                    Items.Filter = defaultItemsFilter;
                 }
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
@@ -263,7 +261,11 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> GetFilter()
         {
-            return SettingOrDefault.GetFilter(Text, TextFromItem);
+            var filter = SettingOrDefault.GetFilter(Text, TextFromItem);
+
+            return defaultItemsFilter != null
+                ? i => defaultItemsFilter(i) && filter(i)
+                : filter;
         }
 
         public AutoCompleteComboBox()
