@@ -77,6 +77,7 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
+                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = null;
                 IEnumerable newValue = dpcea.NewValue as IEnumerable;
                 CollectionViewSource newCollectionViewSource = new CollectionViewSource
                 {
