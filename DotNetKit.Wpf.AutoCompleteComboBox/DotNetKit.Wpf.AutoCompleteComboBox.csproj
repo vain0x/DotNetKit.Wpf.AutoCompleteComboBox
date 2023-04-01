@@ -6,7 +6,7 @@
     <RootNamespace>DotNetKit</RootNamespace>
     <Description>Provides a lightweight combobox with filtering (auto-complete).</Description>
     <Copyright>Copyright (c) 2017 vain0</Copyright>
-    <Version>1.4.0</Version>
+    <Version>1.5.0</Version>
     <Authors>vain0</Authors>
     <projectUrl>https://github.com/DotNetKit/DotNetKit.Wpf.AutoCompleteComboBox</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
