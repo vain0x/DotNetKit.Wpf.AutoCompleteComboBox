@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
@@ -51,12 +52,41 @@ namespace DotNetKit.Windows.Controls
             return d.Value ?? string.Empty;
         }
 
-        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+        #region ItemsSource
+        public static new readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
+                new PropertyMetadata(null, ItemsSourcePropertyChanged));
+        public new IEnumerable ItemsSource
         {
-            base.OnItemsSourceChanged(oldValue, newValue);
-
-            defaultItemsFilter = newValue is ICollectionView cv ? cv.Filter : null;
+            get
+            {
+                return (IEnumerable)GetValue(ItemsSourceProperty);
+            }
+            set
+            {
+                SetValue(ItemsSourceProperty, value);
+            }
         }
+
+        private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
+        {
+            if (dpcea.NewValue is ICollectionView cv)
+            {
+                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
+                ((ComboBox)dependencyObject).ItemsSource = cv;
+            }
+            else
+            {
+                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = null;
+                IEnumerable newValue = dpcea.NewValue as IEnumerable;
+                CollectionViewSource newCollectionViewSource = new CollectionViewSource
+                {
+                    Source = newValue
+                };
+                ((ComboBox)dependencyObject).ItemsSource = newCollectionViewSource.View;
+            }
+        }
+        #endregion ItemsSource
 
         #region Setting
         static readonly DependencyProperty settingProperty =
