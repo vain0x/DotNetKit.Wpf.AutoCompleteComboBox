@@ -4,6 +4,10 @@
 
 ----
 
+## 1.5.0 - 2023-04-02
+
+- Upgrade to .NET Framework 4.6.2 and .NET 6
+
 ## 1.4.0 - 2021-10-17
 
 - [Don't show empty list · Issue #20](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/issues/20)
