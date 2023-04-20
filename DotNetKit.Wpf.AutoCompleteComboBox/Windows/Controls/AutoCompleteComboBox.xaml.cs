@@ -70,10 +70,13 @@ namespace DotNetKit.Windows.Controls
 
         private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
         {
+            var comboBox = (ComboBox)dependencyObject;
+            var previousSelectedItem = comboBox.SelectedItem;
+
             if (dpcea.NewValue is ICollectionView cv)
             {
                 ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
-                ((ComboBox)dependencyObject).ItemsSource = cv;
+                comboBox.ItemsSource = cv;
             }
             else
             {
@@ -83,7 +86,15 @@ namespace DotNetKit.Windows.Controls
                 {
                     Source = newValue
                 };
-                ((ComboBox)dependencyObject).ItemsSource = newCollectionViewSource.View;
+                comboBox.ItemsSource = newCollectionViewSource.View;
+            }
+
+            comboBox.SelectedItem = previousSelectedItem;
+
+            // if ItemsSource doesn't contain previousSelectedItem
+            if (comboBox.SelectedItem != previousSelectedItem)
+            {
+                comboBox.SelectedItem = null;
             }
         }
         #endregion ItemsSource
