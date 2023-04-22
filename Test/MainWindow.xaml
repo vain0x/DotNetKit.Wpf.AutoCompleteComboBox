@@ -1,0 +1,90 @@
+<Window
+    x:Class="Test.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
+    xmlns:test="clr-namespace:Test"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance test:MainViewModel}"
+    Title="Test"
+    Width="800" Height="450" FontSize="16">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="dotNetKitControls:AutoCompleteComboBox">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <StackPanel Margin="16">
+        <!--<GroupBox Header="Internal State" Padding="8,4">
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Margin="0,0,8,0">
+                    Filter:
+                </TextBlock>
+                <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Width="160" />
+            </StackPanel>
+        </GroupBox>-->
+
+        <!-- #1 -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <dotNetKitControls:AutoCompleteComboBox
+                SelectedValuePath="Id"
+                TextSearch.TextPath="Name"
+                ItemsSource="{Binding Items}"
+                SelectedItem="{Binding SelectedItem}"
+                SelectedValue="{Binding SelectedValue}"
+                Margin="0,8,0,0" Width="240">
+                <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
+                            <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+            </dotNetKitControls:AutoCompleteComboBox>
+
+            <TextBlock Margin="8,0,0,0"  VerticalAlignment="Center">
+                SelectedItem: <Run Text="{Binding SelectedItem, Mode=OneWay}" />
+            </TextBlock>
+        </StackPanel>
+
+        <Separator Margin="0,16" />
+
+        <!-- #2 Two boxes should work independently (https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/26) -->
+        <dotNetKitControls:AutoCompleteComboBox
+            SelectedValuePath="Id"
+            TextSearch.TextPath="Name"
+            ItemsSource="{Binding Items}"
+            HorizontalAlignment="Left" Width="240">
+            <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
+                        <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+        </dotNetKitControls:AutoCompleteComboBox>
+
+        <Separator Margin="0,16" />
+
+        <!-- Changing ItemsSource should preserve SelectedItem if possible (https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/28) -->
+        <Button Command="{Binding ReloadCommand}" Width="120" Height="40" HorizontalAlignment="Left">
+            Reload
+        </Button>
+
+        <Button Command="{Binding ClearCommand}" Width="120" Height="40" Margin="0,8,0,0" HorizontalAlignment="Left">
+            Clear
+        </Button>
+    </StackPanel>
+</Window>

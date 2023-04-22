@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetKit.Wpf.AutoCompleteComboBox", "DotNetKit.Wpf.AutoCompleteComboBox\DotNetKit.Wpf.AutoCompleteComboBox.csproj", "{2BE72EA3-16D7-44A8-8FFD-ECC16265D937}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetKit.Wpf.AutoCompleteComboBox", "DotNetKit.Wpf.AutoCompleteComboBox\DotNetKit.Wpf.AutoCompleteComboBox.csproj", "{2BE72EA3-16D7-44A8-8FFD-ECC16265D937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetKit.Wpf.AutoCompleteComboBox.Demo", "DotNetKit.Wpf.AutoCompleteComboBox.Demo\DotNetKit.Wpf.AutoCompleteComboBox.Demo.csproj", "{59AAF64E-B913-4B54-A1F6-DA2A87432F78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetKit.Wpf.AutoCompleteComboBox.Demo", "DotNetKit.Wpf.AutoCompleteComboBox.Demo\DotNetKit.Wpf.AutoCompleteComboBox.Demo.csproj", "{59AAF64E-B913-4B54-A1F6-DA2A87432F78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{0DAD3ABA-DA3D-4914-88BD-B402CA1D79AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{59AAF64E-B913-4B54-A1F6-DA2A87432F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59AAF64E-B913-4B54-A1F6-DA2A87432F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59AAF64E-B913-4B54-A1F6-DA2A87432F78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DAD3ABA-DA3D-4914-88BD-B402CA1D79AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DAD3ABA-DA3D-4914-88BD-B402CA1D79AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DAD3ABA-DA3D-4914-88BD-B402CA1D79AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DAD3ABA-DA3D-4914-88BD-B402CA1D79AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {339E5777-B39C-40FA-9A03-FD5C04D90261}
 	EndGlobalSection
 EndGlobal
