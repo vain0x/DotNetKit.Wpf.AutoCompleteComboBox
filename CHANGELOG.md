@@ -4,6 +4,10 @@
 
 ----
 
+## 1.6.0 - 2023-04-22
+
+- [Try to keep SelectedItem when changing ItemsSource by tmijail · Pull Request #28](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/28)
+
 ## 1.5.0 - 2023-04-02
 
 - Upgrade to .NET Framework 4.6.2 and .NET 6
