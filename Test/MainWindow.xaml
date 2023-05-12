@@ -21,6 +21,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <CollectionViewSource x:Key="itemsViewSource" Source="{Binding Items}" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -39,7 +41,7 @@
             <dotNetKitControls:AutoCompleteComboBox
                 SelectedValuePath="Id"
                 TextSearch.TextPath="Name"
-                ItemsSource="{Binding Items}"
+                ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
                 SelectedItem="{Binding SelectedItem}"
                 SelectedValue="{Binding SelectedValue}"
                 Margin="0,8,0,0" Width="240">
@@ -61,6 +63,8 @@
         <Separator Margin="0,16" />
 
         <!-- #2 Two boxes should work independently (https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/26) -->
+        <!-- FIXME: #1 currently uses CollectionViewSource and this doesn't reproduce
+
         <dotNetKitControls:AutoCompleteComboBox
             SelectedValuePath="Id"
             TextSearch.TextPath="Name"
@@ -77,6 +81,7 @@
         </dotNetKitControls:AutoCompleteComboBox>
 
         <Separator Margin="0,16" />
+        -->
 
         <!-- Changing ItemsSource should preserve SelectedItem if possible (https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/28) -->
         <Button Command="{Binding ReloadCommand}" Width="120" Height="40" HorizontalAlignment="Left">

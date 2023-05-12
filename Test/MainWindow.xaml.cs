@@ -14,7 +14,5 @@ namespace Test
 
             DataContext = new MainViewModel();
         }
-
-        //public CollectionViewSource Items = new CollectionViewSource();
     }
 }
