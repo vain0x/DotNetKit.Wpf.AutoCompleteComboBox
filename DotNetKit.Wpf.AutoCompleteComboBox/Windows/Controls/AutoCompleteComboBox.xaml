@@ -10,5 +10,5 @@
     d:DesignHeight="300"
     IsEditable="True"
     IsTextSearchEnabled="False"
-    PreviewKeyDown="ComboBox_PreviewKeyDown"
+    local:AutoCompleteBehavior.Use="{Binding Setting, TargetNullValue={x:Static local:AutoCompleteComboBoxSetting.Default}, RelativeSource={RelativeSource Mode=Self}}"
     />
