@@ -1,7 +1,9 @@
 using DotNetKit.Demo.Data;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using System.Windows.Input;
 using Test.Util;
 
@@ -14,7 +16,11 @@ namespace Test
         {
             ReloadCommand = new Command(_ => Reload());
             ClearCommand = new Command(_ => Clear());
+
+            CollectionView = new ListCollectionView(Items);
         }
+
+        public ListCollectionView CollectionView { get; }
 
         List<Person> items = new(PersonModule.All);
         public List<Person> Items
@@ -51,6 +57,9 @@ namespace Test
             {
                 GenerateRandomPerson()
             };
+            SelectedValue = Items.Last().Id;
+
+            CollectionView.Refresh();
         }
 
         public ICommand ClearCommand { get; init; }
