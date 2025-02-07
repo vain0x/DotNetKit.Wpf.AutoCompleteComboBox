@@ -12,77 +12,63 @@ using System.ComponentModel;
 
 namespace DotNetKit.Windows.Controls
 {
-    public sealed class AutoCompleteBehavior
+    public sealed class AutoCompleteBehavior : IDisposable
     {
-        #region UseProperty
-        /// <summary>
-        /// When this property is attached to a ComboBox,
-        /// auto completion behavior is provided.
-        ///
-        /// The value of the property is either `null` or an instance of `AutoCompleteComboBoxSetting`.
-        /// </summary>
-        public static readonly DependencyProperty UseProperty = DependencyProperty.RegisterAttached(
-            "Use",
-            typeof(AutoCompleteComboBoxSetting),
-            typeof(AutoCompleteBehavior),
-            new PropertyMetadata(OnUsePropertyChanged)
-        );
+        readonly ComboBox owner;
+        TextBox editableTextBox;
+        readonly DispatcherTimer debounceTimer;
+        Action dispose = null;
 
-        private static void OnUsePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox ?? throw new ArgumentException($"{nameof(AutoCompleteBehavior)}.Use canbe attached to only ComboBox.");
-
-            var behavior = GetBehavior(comboBox);
-            if (behavior == null)
-            {
-                behavior = new AutoCompleteBehavior(comboBox);
-                SetBehavior(comboBox, behavior);
-            }
-
-            behavior.setting = (e.NewValue as AutoCompleteComboBoxSetting) ?? AutoCompleteComboBoxSetting.Default;
-        }
-
-        public static ComboBox GetUse(DependencyObject obj) => (ComboBox)obj.GetValue(UseProperty);
-        public static void SetUse(DependencyObject obj, ComboBox value) => obj.SetValue(UseProperty, value);
-        #endregion
-
-        #region BehaviorProperty
-        /// <summary>
-        /// <b>[Internal use only]</b>:
-        /// This property just provides a slot to store a behavior object to manage state.
-        /// </para>
-        /// </summary>
-        public static readonly DependencyProperty BehaviorProperty = DependencyProperty.RegisterAttached(
-            "Behavior",
-            typeof(AutoCompleteBehavior),
-            typeof(AutoCompleteBehavior)
-        );
-
-        public static AutoCompleteBehavior GetBehavior(DependencyObject obj) => (AutoCompleteBehavior)obj.GetValue(BehaviorProperty);
-        public static void SetBehavior(DependencyObject obj, AutoCompleteBehavior value) => obj.SetValue(BehaviorProperty, value);
-        #endregion
+        public Predicate<object> defaultItemsFilter;
+        public Func<AutoCompleteComboBoxSetting> GetSetting { get; set; }
 
         public AutoCompleteBehavior(ComboBox owner)
         {
             this.owner = owner;
-
             debounceTimer = new DispatcherTimer(DispatcherPriority.Background, owner.Dispatcher);
-            debounceTimer.Tick += (_sender, _e) =>
-            {
-                debounceTimer.Stop();
-                UpdateSuggestionList();
-            };
 
-            owner.AddHandler(UIElement.PreviewKeyDownEvent, new KeyEventHandler(OnPreviewKeyDown));
-            owner.AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
+            var onPreviewKeyDown = new KeyEventHandler(OnPreviewKeyDown);
+            owner.AddHandler(UIElement.PreviewKeyDownEvent, onPreviewKeyDown);
+
+            var onTextChanged = new TextChangedEventHandler(OnTextChanged);
+            owner.AddHandler(TextBoxBase.TextChangedEvent, onTextChanged);
+
+            dispose = () =>
+            {
+                owner.RemoveHandler(UIElement.PreviewKeyDownEvent, onPreviewKeyDown);
+                owner.RemoveHandler(TextBoxBase.TextChangedEvent, onTextChanged);
+            };
         }
 
-        readonly ComboBox owner;
-        TextBox editableTextBox;
-        readonly DispatcherTimer debounceTimer;
+        public void Dispose()
+        {
+            debounceTimer.Stop();
+            dispose?.Invoke();
+            dispose = null;
+        }
 
-        Predicate<object> defaultItemsFilter;
-        AutoCompleteComboBoxSetting setting;
+        public AutoCompleteComboBoxSetting Setting
+        {
+            get
+            {
+                if (GetSetting != null)
+                {
+                    return GetSetting() ?? AutoCompleteComboBoxSetting.Default;
+                }
+                return AutoCompleteComboBoxSetting.Default;
+            }
+            set
+            {
+                var setting = value;
+                GetSetting = () => setting;
+            }
+        }
+
+        void OnDebounceTimerTick(object sender, EventArgs e)
+        {
+            debounceTimer.Stop();
+            UpdateSuggestionList();
+        }
 
         static TextBox FindEditableTextBox(ComboBox comboBox)
         {
@@ -115,53 +101,6 @@ namespace DotNetKit.Windows.Controls
             d.SetBinding(item, TextSearch.GetTextPath(owner));
             return d.Value ?? string.Empty;
         }
-
-        //#region ItemsSource
-        //public static new readonly DependencyProperty ItemsSourceProperty =
-        //    DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
-        //        new PropertyMetadata(null, ItemsSourcePropertyChanged));
-        //public new IEnumerable ItemsSource
-        //{
-        //    get
-        //    {
-        //        return (IEnumerable)GetValue(ItemsSourceProperty);
-        //    }
-        //    set
-        //    {
-        //        SetValue(ItemsSourceProperty, value);
-        //    }
-        //}
-
-        //private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
-        //{
-        //    var comboBox = (ComboBox)dependencyObject;
-        //    var previousSelectedItem = comboBox.SelectedItem;
-
-        //    if (dpcea.NewValue is ICollectionView cv)
-        //    {
-        //        ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
-        //        comboBox.ItemsSource = cv;
-        //    }
-        //    else
-        //    {
-        //        ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = null;
-        //        IEnumerable newValue = dpcea.NewValue as IEnumerable;
-        //        CollectionViewSource newCollectionViewSource = new CollectionViewSource
-        //        {
-        //            Source = newValue
-        //        };
-        //        comboBox.ItemsSource = newCollectionViewSource.View;
-        //    }
-
-        //    comboBox.SelectedItem = previousSelectedItem;
-
-        //    // if ItemsSource doesn't contain previousSelectedItem
-        //    if (comboBox.SelectedItem != previousSelectedItem)
-        //    {
-        //        comboBox.SelectedItem = null;
-        //    }
-        //}
-        //#endregion ItemsSource
 
         #region OnTextChanged
         string previousText;
@@ -267,7 +206,7 @@ namespace DotNetKit.Windows.Controls
                 }
 
                 var filter = GetFilter();
-                var maxCount = setting.MaxSuggestionCount;
+                var maxCount = Setting.MaxSuggestionCount;
                 var count = CountWithMax(owner.ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
 
                 if (0 < count && count <= maxCount)
@@ -279,7 +218,7 @@ namespace DotNetKit.Windows.Controls
 
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var delay = setting.Delay;
+            var delay = Setting.Delay;
 
             if (delay <= TimeSpan.Zero)
             {
@@ -288,7 +227,7 @@ namespace DotNetKit.Windows.Controls
             }
 
             // Wait for debunce.
-            debounceTimer.Interval = setting.Delay;
+            debounceTimer.Interval = delay;
             debounceTimer.Stop();
             debounceTimer.Start();
         }
@@ -306,7 +245,7 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> GetFilter()
         {
-            var filter = setting.GetFilter(owner.Text, TextFromItem);
+            var filter = Setting.GetFilter(owner.Text, TextFromItem);
 
             return defaultItemsFilter != null
                 ? i => defaultItemsFilter(i) && filter(i)

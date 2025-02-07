@@ -9,6 +9,4 @@
     d:DesignWidth="300"
     d:DesignHeight="300"
     IsEditable="True"
-    IsTextSearchEnabled="False"
-    local:AutoCompleteBehavior.Use="{Binding Setting, TargetNullValue={x:Static local:AutoCompleteComboBoxSetting.Default}, RelativeSource={RelativeSource Mode=Self}}"
-    />
+    IsTextSearchEnabled="False" />
