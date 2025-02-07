@@ -72,3 +72,16 @@ Use `ItemsPanel` property:
 or declare a style in resources as the Demo app does.
 
 See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](http://vbcity.com/blogs/xtab/archive/2009/12/15/wpf-using-a-virtualizingstackpanel-to-improve-combobox-performance.aspx) for more detailed explanation.
+
+## Internals
+This library is basically a thin wrapper of the standard `ComboBox` with some behaviors.
+
+### What Happens Under the Hood
+- Finds the TextBox part (in the ComboBox) to listen to the TextChanged event
+- Opens or close the dropdown whenever the text changed (and then the debounce timer fired)
+    - TextBox selection is carefully saved and restored to not disturb the user
+- Filters the ComboBox items based on the input
+- Defines `ItemsSource` DependencyProperty that shadows the `ItemsControl.ItemsProperty` (see also [#26])
+- Handles PreviewKeyDown events (`Ctrl+Space`) to open the dropdown
+
+[#26]: https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/26
