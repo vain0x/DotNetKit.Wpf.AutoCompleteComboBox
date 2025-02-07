@@ -10,6 +10,8 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+Tip: When you encounter an issue, please check whether or not the same issue occurs by replacing `AutoCompleteComboBox` with `ComboBox`.
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
