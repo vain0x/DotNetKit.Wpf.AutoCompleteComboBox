@@ -18,6 +18,7 @@ namespace Test
             ClearCommand = new Command(_ => Clear());
 
             CollectionView = new ListCollectionView(Items);
+            CollectionView.Filter = (item) => ((Person)item).Name.StartsWith("A");
         }
 
         public ListCollectionView CollectionView { get; }
