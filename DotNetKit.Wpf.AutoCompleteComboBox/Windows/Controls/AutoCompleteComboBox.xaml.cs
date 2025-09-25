@@ -53,50 +53,50 @@ namespace DotNetKit.Windows.Controls
         }
 
         #region ItemsSource
-        public static new readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
-                new PropertyMetadata(null, ItemsSourcePropertyChanged));
-        public new IEnumerable ItemsSource
-        {
-            get
-            {
-                return (IEnumerable)GetValue(ItemsSourceProperty);
-            }
-            set
-            {
-                SetValue(ItemsSourceProperty, value);
-            }
-        }
+        //public static new readonly DependencyProperty ItemsSourceProperty =
+        //    DependencyProperty.Register(nameof(ItemsSource), typeof(IEnumerable), typeof(AutoCompleteComboBox),
+        //        new PropertyMetadata(null, ItemsSourcePropertyChanged));
+        //public new IEnumerable ItemsSource
+        //{
+        //    get
+        //    {
+        //        return (IEnumerable)GetValue(ItemsSourceProperty);
+        //    }
+        //    set
+        //    {
+        //        SetValue(ItemsSourceProperty, value);
+        //    }
+        //}
 
-        private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
-        {
-            var comboBox = (ComboBox)dependencyObject;
-            var previousSelectedItem = comboBox.SelectedItem;
+        //private static void ItemsSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dpcea)
+        //{
+        //    var comboBox = (ComboBox)dependencyObject;
+        //    var previousSelectedItem = comboBox.SelectedItem;
 
-            if (dpcea.NewValue is ICollectionView cv)
-            {
-                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
-                comboBox.ItemsSource = cv;
-            }
-            else
-            {
-                ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = null;
-                IEnumerable newValue = dpcea.NewValue as IEnumerable;
-                CollectionViewSource newCollectionViewSource = new CollectionViewSource
-                {
-                    Source = newValue
-                };
-                comboBox.ItemsSource = newCollectionViewSource.View;
-            }
+        //    if (dpcea.NewValue is ICollectionView cv)
+        //    {
+        //        ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = cv.Filter;
+        //        comboBox.ItemsSource = cv;
+        //    }
+        //    else
+        //    {
+        //        ((AutoCompleteComboBox)dependencyObject).defaultItemsFilter = null;
+        //        IEnumerable newValue = dpcea.NewValue as IEnumerable;
+        //        CollectionViewSource newCollectionViewSource = new CollectionViewSource
+        //        {
+        //            Source = newValue
+        //        };
+        //        comboBox.ItemsSource = newCollectionViewSource.View;
+        //    }
 
-            comboBox.SelectedItem = previousSelectedItem;
+        //    comboBox.SelectedItem = previousSelectedItem;
 
-            // if ItemsSource doesn't contain previousSelectedItem
-            if (comboBox.SelectedItem != previousSelectedItem)
-            {
-                comboBox.SelectedItem = null;
-            }
-        }
+        //    // if ItemsSource doesn't contain previousSelectedItem
+        //    if (comboBox.SelectedItem != previousSelectedItem)
+        //    {
+        //        comboBox.SelectedItem = null;
+        //    }
+        //}
         #endregion ItemsSource
 
         #region Setting

@@ -39,6 +39,7 @@
             <dotNetKitControls:AutoCompleteComboBox
                 SelectedValuePath="Id"
                 TextSearch.TextPath="Name"
+                Text="{Binding Text, Mode=TwoWay}"
                 ItemsSource="{Binding Items}"
                 SelectedItem="{Binding SelectedItem}"
                 SelectedValue="{Binding SelectedValue}"
@@ -55,6 +56,7 @@
 
             <TextBlock Margin="8,0,0,0"  VerticalAlignment="Center">
                 SelectedItem: <Run Text="{Binding SelectedItem, Mode=OneWay}" />
+                Text: <Run Text="{Binding Text, Mode=OneWay}" />
             </TextBlock>
         </StackPanel>
 

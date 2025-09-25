@@ -30,6 +30,13 @@ namespace Test
             set { SetField(ref selectedItem, value); }
         }
 
+        string text = "";
+        public string Text
+        {
+            get => text;
+            set { SetField(ref text, value); }
+        }
+
         long? selectedValue;
         public long? SelectedValue
         {
