@@ -1,13 +1,13 @@
-using DotNetKit.Demo.Data;
+using Demo.Data;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Input;
-using Test.Util;
+using Tests.Util;
 
-namespace Test
+namespace Tests
 {
     sealed class MainViewModel
         : INotifyPropertyChanged

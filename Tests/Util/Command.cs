@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Test.Util
+namespace Tests.Util
 {
     sealed class Command : ICommand
     {

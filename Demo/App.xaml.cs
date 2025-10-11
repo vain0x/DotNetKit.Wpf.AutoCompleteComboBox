@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DotNetKit.Demo
+namespace Demo
 {
     /// <summary>
     /// App.xaml

@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNetKit.Wpf.AutoCompleteComboBox.Demo\DotNetKit.Wpf.AutoCompleteComboBox.Demo.csproj" />
-    <ProjectReference Include="..\DotNetKit.Wpf.AutoCompleteComboBox\DotNetKit.Wpf.AutoCompleteComboBox.csproj" />
+    <ProjectReference Include="..\AutoCompleteComboBoxWpf\AutoCompleteComboBoxWpf.csproj" />
+    <ProjectReference Include="..\Demo\Demo.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 
-namespace Test
+namespace Tests
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

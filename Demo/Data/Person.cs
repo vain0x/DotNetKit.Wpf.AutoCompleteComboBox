@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNetKit.Demo.Data
+namespace Demo.Data
 {
     public sealed class Person
     {

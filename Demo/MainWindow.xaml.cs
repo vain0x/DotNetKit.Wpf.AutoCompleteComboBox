@@ -14,9 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DotNetKit.Demo.Data;
+using Demo.Data;
 
-namespace DotNetKit.Demo
+namespace Demo
 {
     /// <summary>
     /// MainWindow.xaml
