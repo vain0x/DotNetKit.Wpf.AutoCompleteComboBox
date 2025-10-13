@@ -8,38 +8,40 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:CollectionViewSourceCaseViewModel}">
-    <GroupBox>
-        <GroupBox.Header>
-            <TextBlock>
-                CollectionViewSourceCase:
-                Changing Items source should preserve SelectedItem if possible (#28)
-            </TextBlock>
-        </GroupBox.Header>
+    <GroupBox Header="CollectionViewSourceCase">
         <StackPanel>
-            <dotNetKitControls:AutoCompleteComboBox
-            SelectedValuePath="Id"
-            TextSearch.TextPath="Name"
-            ItemsSource="{Binding Items}"
-            HorizontalAlignment="Left" Width="240">
-                <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
-                            <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
-            </dotNetKitControls:AutoCompleteComboBox>
+            <TextBlock>Combine combobox filter with items/CollectionView filter (#10)</TextBlock>
+            <TextBlock>Changing Items source should preserve SelectedItem if possible (#28)</TextBlock>
 
-            <Separator Margin="0,16" />
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <dotNetKitControls:AutoCompleteComboBox
+                SelectedValuePath="Id"
+                TextSearch.TextPath="Name"
+                ItemsSource="{Binding CollectionViewSource.View}"
+                SelectedItem="{Binding SelectedItem}"
+                SelectedValue="{Binding SelectedValue}"
+                HorizontalAlignment="Left" Width="200">
+                    <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
+                                <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                </dotNetKitControls:AutoCompleteComboBox>
 
-            <Button Command="{Binding ReloadCommand}" Width="120" Height="40" HorizontalAlignment="Left">
-                Reload
-            </Button>
+                <TextBlock Margin="10,0,5,0">Filter:</TextBlock>
+                <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Width="80" />
 
-            <Button Command="{Binding ClearCommand}" Width="120" Height="40" Margin="0,8,0,0" HorizontalAlignment="Left">
-                Clear
-            </Button>
+                <Button Command="{Binding ReloadCommand}" Width="80" Margin="10,0,0,0">
+                    Reload
+                </Button>
+
+                <Button Command="{Binding ClearCommand}" Width="80" Margin="10,0,0,0">
+                    Clear
+                </Button>
+            </StackPanel>
         </StackPanel>
     </GroupBox>
 </UserControl>
