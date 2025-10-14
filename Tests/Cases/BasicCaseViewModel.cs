@@ -12,6 +12,8 @@ namespace Tests.Cases
     {
         public BasicCaseViewModel()
         {
+            SelectPrevCommand = new Command(_ => SelectPrev());
+            SelectNextCommand = new Command(_ => SelectNext());
             ReloadCommand = new Command(_ => Reload());
             ClearCommand = new Command(_ => Clear());
         }
@@ -28,6 +30,13 @@ namespace Tests.Cases
         {
             get { return text; }
             set { SetField(ref text, value); }
+        }
+
+        int selectedIndex = -1;
+        public int SelectedIndex
+        {
+            get => selectedIndex;
+            set { SetField(ref selectedIndex, value); }
         }
 
         Person? selectedItem;
@@ -50,6 +59,24 @@ namespace Tests.Cases
         //    get => filter;
         //    set { SetField(ref filter, value); }
         //}
+
+        public ICommand SelectPrevCommand { get; init; }
+        void SelectPrev()
+        {
+            if (SelectedIndex > 0)
+            {
+                SelectedIndex--;
+            }
+        }
+
+        public ICommand SelectNextCommand { get; init; }
+        void SelectNext()
+        {
+            if (SelectedIndex >= 0)
+            {
+                SelectedIndex++;
+            }
+        }
 
         public ICommand ReloadCommand { get; init; }
         public void Reload()

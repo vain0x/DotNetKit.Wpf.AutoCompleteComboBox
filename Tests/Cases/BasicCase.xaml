@@ -13,6 +13,7 @@
                 <Run Text="Text:" FontWeight="Bold" />
                 <Run Text="{Binding Text, Mode=OneWay}" />
                 <Run Text="Selected:" FontWeight="Bold" />
+                <Run Text="{Binding SelectedIndex, Mode=OneWay}" />
                 <Run Text="{Binding SelectedValue, Mode=OneWay}" />
                 <Run Text="{Binding SelectedItem.Name, Mode=OneWay}" />
                 <Run Text="Items" FontWeight="Bold" />
@@ -26,6 +27,7 @@
                     TextSearch.TextPath="Name"
                     Text="{Binding Text}"
                     ItemsSource="{Binding Items}"
+                    SelectedIndex="{Binding SelectedIndex}"
                     SelectedItem="{Binding SelectedItem}"
                     SelectedValue="{Binding SelectedValue}"
                     HorizontalAlignment="Left" Width="240">
@@ -38,6 +40,14 @@
                         </DataTemplate>
                     </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
                 </dotNetKitControls:AutoCompleteComboBox>
+
+                <Button Command="{Binding SelectPrevCommand}" Width="80" Margin="10,0,0,0">
+                    Prev
+                </Button>
+
+                <Button Command="{Binding SelectNextCommand}" Width="80" Margin="5,0,0,0">
+                    Next
+                </Button>
 
                 <Button Command="{Binding ReloadCommand}" Width="80" Margin="10,0,0,0">
                     Reload
