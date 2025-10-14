@@ -1,9 +1,8 @@
 using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -23,6 +22,8 @@ namespace DotNetKit.Windows.Controls
         TextBox editableTextBoxCache;
 
         Predicate<object> defaultItemsFilter;
+        Predicate<object> appliedItemsFilter;
+        static Dictionary<Predicate<object>, string> FilterNames = new Dictionary<Predicate<object>, string>();
 
         public TextBox EditableTextBox
         {
@@ -49,13 +50,6 @@ namespace DotNetKit.Windows.Controls
             var d = new DependencyVariable<string>();
             d.SetBinding(item, TextSearch.GetTextPath(this));
             return d.Value ?? string.Empty;
-        }
-
-        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
-        {
-            base.OnItemsSourceChanged(oldValue, newValue);
-
-            defaultItemsFilter = newValue is ICollectionView cv ? cv.Filter : null;
         }
 
         #region Setting
@@ -130,27 +124,61 @@ namespace DotNetKit.Windows.Controls
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void UpdateFilter(Predicate<object> filter)
+        void UpdateFilter()
         {
+            // Assignment to Filter sometimes removes the text without the preserver.
             using (new TextBoxStatePreserver(EditableTextBox))
             using (Items.DeferRefresh())
             {
-                // Can empty the text box. I don't why.
-                Items.Filter = filter;
-            }
-        }
+                // Capture the underlying filter if Items.Filter is modified.
+                if (Items.Filter != appliedItemsFilter)
+                {
+                    defaultItemsFilter = Items.Filter;
+                }
 
-        void OpenDropDown(Predicate<object> filter)
-        {
-            UpdateFilter(filter);
-            IsDropDownOpen = true;
-            Unselect();
+                var filter = GetFilter();
+                if (defaultItemsFilter == null && Items.Filter != null)
+                {
+                    defaultItemsFilter = Items.Filter;
+                    FilterNames[defaultItemsFilter] = "Captured filter";
+                }
+                if (filter != null && !FilterNames.ContainsKey(filter))
+                {
+                    FilterNames.Add(filter, "provided filter: " + Text);
+                }
+
+                Items.Filter = filter;
+                appliedItemsFilter = filter;
+            }
         }
 
         void OpenDropDown()
         {
-            var filter = GetFilter();
-            OpenDropDown(filter);
+            //UpdateFilter();
+            IsDropDownOpen = true;
+            //Unselect();
+        }
+
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            UpdateFilter();
+
+            base.OnDropDownOpened(e);
+
+            var name = "";
+            if (Items.Filter != null && FilterNames.ContainsKey(Items.Filter))
+            {
+                name = FilterNames[Items.Filter];
+            }
+            else if (Items.Filter != null)
+            {
+                name = "unknown";
+            }
+            else
+            {
+                name = "null";
+            }
+            Debug.WriteLine($"Dropdown open filter={name}");
         }
 
         void UpdateSuggestionList()
@@ -165,15 +193,26 @@ namespace DotNetKit.Windows.Controls
                 IsDropDownOpen = false;
                 SelectedItem = null;
 
-                using (Items.DeferRefresh())
+                // Remove filter.
+                //using (Items.DeferRefresh())
+                //{
+                //    RemoveFilter();
+                //    //Items.Filter = defaultItemsFilter;
+                //}
+                //UpdateFilter();
+                if (IsDropDownOpen)
                 {
-                    Items.Filter = defaultItemsFilter;
+                    UpdateFilter();
                 }
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
             {
                 // It seems the user selected an item.
                 // Do nothing.
+            }
+            else if (IsDropDownOpen)
+            {
+                UpdateFilter();
             }
             else
             {
@@ -182,13 +221,15 @@ namespace DotNetKit.Windows.Controls
                     SelectedItem = null;
                 }
 
-                var filter = GetFilter();
+                var textFilter = SettingOrDefault.GetFilter(Text ?? "", TextFromItem);
+                //var filter = GetFilter();
+                var filter = textFilter;
                 var maxCount = SettingOrDefault.MaxSuggestionCount;
                 var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
 
                 if (0 < count && count <= maxCount && IsKeyboardFocusWithin)
                 {
-                    OpenDropDown(filter);
+                    OpenDropDown();
                 }
             }
         }
@@ -232,8 +273,12 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> GetFilter()
         {
-            var filter = SettingOrDefault.GetFilter(Text, TextFromItem);
+            if (string.IsNullOrEmpty(Text))
+            {
+                return defaultItemsFilter;
+            }
 
+            var filter = SettingOrDefault.GetFilter(Text ?? "", TextFromItem);
             return defaultItemsFilter != null
                 ? i => defaultItemsFilter(i) && filter(i)
                 : filter;

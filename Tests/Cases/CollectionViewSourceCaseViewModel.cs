@@ -76,7 +76,7 @@ namespace Tests.Cases
                 }
             }
 
-            SelectedValue = newItems[0].Id;
+            //SelectedValue = newItems[0].Id;
             cvs.View.Refresh();
         }
 
