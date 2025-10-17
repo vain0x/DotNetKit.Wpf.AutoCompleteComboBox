@@ -1,9 +1,12 @@
 ﻿using Demo.Data;
+using DotNetKit.Windows.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Tests.Util;
 
 namespace Tests.Cases
@@ -58,7 +61,18 @@ namespace Tests.Cases
             set
             {
                 SetField(ref filter, value);
+                var currentFilter = cvs.View.Filter;
+                Debug.WriteLine($"filter: text='{Filter}'");
                 cvs.View.Refresh();
+                var newFilter = cvs.View.Filter;
+                Debug.WriteLine($"  filterChanged: {currentFilter != newFilter}");
+                AutoCompleteComboBox.FilterNames[newFilter] = $"vm({value})";
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+                {
+                    var deferFilter = cvs.View.Filter;
+                    Debug.WriteLine($"  filterChanged(defer): {currentFilter != newFilter} {newFilter != deferFilter}");
+                    AutoCompleteComboBox.FilterNames[deferFilter] = $"vm({value})";
+                }));
             }
         }
 

@@ -23,7 +23,7 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> defaultItemsFilter;
         Predicate<object> appliedItemsFilter;
-        static Dictionary<Predicate<object>, string> FilterNames = new Dictionary<Predicate<object>, string>();
+        public static Dictionary<Predicate<object>, string> FilterNames = new Dictionary<Predicate<object>, string>();
 
         public TextBox EditableTextBox
         {
@@ -133,18 +133,24 @@ namespace DotNetKit.Windows.Controls
                 // Capture the underlying filter if Items.Filter is modified.
                 if (Items.Filter != appliedItemsFilter)
                 {
+                    Debug.WriteLine($"capturing");
                     defaultItemsFilter = Items.Filter;
+                    if (!FilterNames.ContainsKey(defaultItemsFilter))
+                    {
+                        FilterNames[defaultItemsFilter] = "captured";
+                    }
                 }
 
                 var filter = GetFilter();
-                if (defaultItemsFilter == null && Items.Filter != null)
-                {
-                    defaultItemsFilter = Items.Filter;
-                    FilterNames[defaultItemsFilter] = "Captured filter";
-                }
+                //if (defaultItemsFilter == null && Items.Filter != null)
+                //{
+                //    defaultItemsFilter = Items.Filter;
+                //}
                 if (filter != null && !FilterNames.ContainsKey(filter))
                 {
-                    FilterNames.Add(filter, "provided filter: " + Text);
+                    var defaultName = defaultItemsFilter != null ? (FilterNames.TryGetValue(defaultItemsFilter, out var x) ? x : "default") : "null";
+                    var name = $"input({Text})+{defaultName}";
+                    FilterNames.Add(filter, name);
                 }
 
                 Items.Filter = filter;
