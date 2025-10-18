@@ -1,15 +1,14 @@
-using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace DotNetKit.Windows.Controls
 {
@@ -18,10 +17,8 @@ namespace DotNetKit.Windows.Controls
     /// </summary>
     public partial class AutoCompleteComboBox : ComboBox
     {
-        readonly SerialDisposable disposable = new SerialDisposable();
-
         TextBox editableTextBoxCache;
-
+        DispatcherTimer debounceTimer;
         Predicate<object> defaultItemsFilter;
 
         public TextBox EditableTextBox
@@ -204,20 +201,23 @@ namespace DotNetKit.Windows.Controls
                 return;
             }
 
-            disposable.Content =
-                new Timer(
-                    state =>
-                    {
-                        Dispatcher.InvokeAsync(() =>
-                        {
-                            if (revisionId != id) return;
-                            UpdateSuggestionList();
-                        });
-                    },
-                    null,
-                    setting.Delay,
-                    Timeout.InfiniteTimeSpan
-                );
+            // Wait for delay (debounce pattern.)
+            if (debounceTimer != null)
+            {
+                debounceTimer.Stop();
+            }
+            var onTick = new EventHandler((_sender, _e) =>
+            {
+                debounceTimer.Stop();
+                debounceTimer = null;
+
+                if (revisionId == id)
+                {
+                    UpdateSuggestionList();
+                }
+            });
+            debounceTimer = new DispatcherTimer(setting.Delay, DispatcherPriority.Background, onTick, Dispatcher);
+            debounceTimer.Start();
         }
         #endregion
 
