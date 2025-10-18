@@ -121,33 +121,19 @@ namespace DotNetKit.Windows.Controls
             return count;
         }
 
-        void Unselect()
+        void SetFilter(Predicate<object> filter)
         {
             var textBox = EditableTextBox;
-            textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
-        }
 
-        void UpdateFilter(Predicate<object> filter)
-        {
-            using (new TextBoxStatePreserver(EditableTextBox))
+            // Assignment to Items.Filter somtimes clear the TextBox for some reason. The Preserver is used as a workaround.
+            using (new TextBoxStatePreserver(textBox))
             using (Items.DeferRefresh())
             {
-                // Can empty the text box. I don't why.
                 Items.Filter = filter;
             }
-        }
 
-        void OpenDropDown(Predicate<object> filter)
-        {
-            UpdateFilter(filter);
-            IsDropDownOpen = true;
-            Unselect();
-        }
-
-        void OpenDropDown()
-        {
-            var filter = GetFilter();
-            OpenDropDown(filter);
+            // Unselect text.
+            textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
         void UpdateSuggestionList()
@@ -172,6 +158,10 @@ namespace DotNetKit.Windows.Controls
                 // It seems the user selected an item.
                 // Do nothing.
             }
+            else if (IsDropDownOpen)
+            {
+                SetFilter(GetFilter());
+            }
             else
             {
                 using (new TextBoxStatePreserver(EditableTextBox))
@@ -185,7 +175,7 @@ namespace DotNetKit.Windows.Controls
 
                 if (0 < count && count <= maxCount && IsKeyboardFocusWithin)
                 {
-                    OpenDropDown(filter);
+                    IsDropDownOpen = true;
                 }
             }
         }
@@ -221,12 +211,19 @@ namespace DotNetKit.Windows.Controls
         }
         #endregion
 
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            base.OnDropDownOpened(e);
+
+            SetFilter(GetFilter());
+        }
+
         void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && e.Key == Key.Space)
             {
-                OpenDropDown();
                 e.Handled = true;
+                IsDropDownOpen = true;
             }
         }
 
