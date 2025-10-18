@@ -1,6 +1,7 @@
 using DotNetKit.Misc.Disposables;
 using DotNetKit.Windows.Media;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace DotNetKit.Windows.Controls
@@ -222,10 +224,10 @@ namespace DotNetKit.Windows.Controls
             }
             else
             {
-                using (new TextBoxStatePreserver(EditableTextBox))
-                {
-                    SelectedItem = null;
-                }
+                //using (new TextBoxStatePreserver(EditableTextBox))
+                //{
+                //    SelectedItem = null;
+                //}
 
                 var textFilter = SettingOrDefault.GetFilter(Text ?? "", TextFromItem);
                 //var filter = GetFilter();
@@ -242,6 +244,8 @@ namespace DotNetKit.Windows.Controls
 
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            //Debug.WriteLine($"TextChanged ('{Text}')");
+
             var id = unchecked(++revisionId);
             var setting = SettingOrDefault;
 
@@ -290,11 +294,36 @@ namespace DotNetKit.Windows.Controls
                 : filter;
         }
 
+        //public IEnumerable ItemsSourceBinder
+        //{
+        //    get { return (IEnumerable)GetValue(ItemsSourceBinderProperty); }
+        //    set { SetValue(ItemsSourceBinderProperty, value); }
+        //}
+        //public static readonly DependencyProperty ItemsSourceBinderProperty =
+        //    DependencyProperty.Register("ItemsSourceBinder", typeof(IEnumerable), typeof(AutoCompleteComboBox), new PropertyMetadata(null)
+        //    {
+        //        PropertyChangedCallback = OnItemsSourceBinderChanged,
+        //    });
+        //static void OnItemsSourceBinderChanged(object sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    Debug.WriteLine("ItemsSourceBinderChanged");
+        //    AutoCompleteComboBox cb = (AutoCompleteComboBox)sender;
+        //    cb.OnItemsSourceChangedShadowing();
+        //}
+        //private void OnItemsSourceChangedShadowing()
+        //{
+        //    defaultItemsFilter = null;
+        //}
+
         public AutoCompleteComboBox()
         {
             InitializeComponent();
 
             AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
+
+            // ItemsSourceBinder={Binding ItemsSource, Source=self}
+            // to notify changing of ItemsSource itself
+            //BindingOperations.SetBinding(this, ItemsSourceBinderProperty, new Binding("ItemsSource") { Source = this });
         }
     }
 }
