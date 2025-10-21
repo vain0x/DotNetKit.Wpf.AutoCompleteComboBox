@@ -12,19 +12,16 @@ namespace Tests.Cases
     {
         public CollectionViewCaseViewModel()
         {
-            collectionView = new(Items);
+            source = new ObservableCollection<Person>(allItems);
+            collectionView = new(source);
             ReloadCommand = new Command(_ => Reload());
             ClearCommand = new Command(_ => Clear());
         }
 
-        ObservableCollection<Person> items = new(PersonModule.All);
-        public ObservableCollection<Person> Items
-        {
-            get => items;
-            set { SetField(ref items, value); }
-        }
+        List<Person> allItems = new(PersonModule.All);
+        readonly ObservableCollection<Person> source;
 
-        ListCollectionView collectionView;
+        readonly ListCollectionView collectionView;
         public ListCollectionView CollectionView => collectionView;
 
         Person? selectedItem;
@@ -49,36 +46,48 @@ namespace Tests.Cases
             {
                 SetField(ref filter, value);
 
-                // Update filter.
-                collectionView.Filter = obj =>
-                {
-                    var item = (Person)obj;
-                    return item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
-                };
-                collectionView.Refresh();
+                // Do not this; changing Filter is overwritten by the library.
+                //collectionView.Filter = obj =>
+                //{
+                //    var item = (Person)obj;
+                //    return item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+                //};
+                //collectionView.Refresh();
+
+                ResetSource();
             }
         }
 
         public ICommand ReloadCommand { get; init; }
         public void Reload()
         {
-            var newItems = new ObservableCollection<Person>(PersonModule.All);
+            // Regenerate items.
+            var newItems = new List<Person>(PersonModule.All);
             newItems.Insert(0, GenerateRandomPerson());
+            allItems = newItems;
 
-            Items.Clear();
-            foreach (var item in newItems)
-            {
-                Items.Add(item);
-            }
+            ResetSource();
 
             //SelectedValue = newItems[0].Id;
-            CollectionView.Refresh();
+            //CollectionView.Refresh();
+        }
+
+        void ResetSource()
+        {
+            source.Clear();
+            foreach (var item in allItems)
+            {
+                if (item.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                {
+                    source.Add(item);
+                }
+            }
         }
 
         public ICommand ClearCommand { get; init; }
         public void Clear()
         {
-            Items.Clear();
+            source.Clear();
             //CollectionView.Refresh();
         }
 

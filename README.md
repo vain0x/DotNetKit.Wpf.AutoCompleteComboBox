@@ -78,6 +78,11 @@ See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](h
 - Multiple ComboBoxes are affecting each other when using the same ItemsSource object.
 - Workaround: Use distinct ItemsSource instance for each AutoCompleteComboBox. For example, wrap it with a ReadOnlyCollection.
 
+### Filter Conflict
+- Changing `AutoCompleteComboBox.Filter` in user code conflicts with the library's functionality.
+- Workaround: Avoid changing Filter in user code. Filter ItemsSource instead.
+- It seems no way to merge CollectionView filters correctly. Please let me know if you have a solution.
+
 ### Background Not Applied
 `ComboBox` doesn't seem to support Background. I don't know easy fix.
 
