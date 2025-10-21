@@ -16,13 +16,12 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <dotNetKitControls:AutoCompleteComboBox
-                                ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Items}"
+                                ItemsSource="{Binding ItemsSource}"
                                 SelectedValue="{Binding PersonId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 SelectedValuePath="Id"
                                 TextSearch.TextPath="Name"
                                 DisplayMemberPath="Name"
-                                HorizontalContentAlignment="Stretch">
-                            </dotNetKitControls:AutoCompleteComboBox>
+                                HorizontalContentAlignment="Stretch" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

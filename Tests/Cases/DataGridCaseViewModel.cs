@@ -1,6 +1,6 @@
 ﻿using Demo.Data;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Tests.Util;
 
 namespace Tests.Cases
@@ -21,11 +21,7 @@ namespace Tests.Cases
             }
         }
 
-        private List<Person> items = new(PersonModule.All);
-        public IReadOnlyList<Person> Items
-        {
-            get { return items; }
-        }
+        private static readonly Person[] Persons = PersonModule.All.Take(50).ToArray();
 
         private Person? selectedItem;
         public Person? SelectedItem
@@ -62,6 +58,14 @@ namespace Tests.Cases
             {
                 get { return baseName; }
                 set { SetField(ref baseName, value); }
+            }
+
+            // Use distinct ItemsSource instance for each row to avoid comboxes affecting each other of the same source. (#26)
+            // ReadOnlyCollection is a readonly wrapper of list.
+            private ReadOnlyCollection<Person> itemsSource = new ReadOnlyCollection<Person>(Persons);
+            public ReadOnlyCollection<Person> ItemsSource
+            {
+                get { return itemsSource; }
             }
         }
     }
