@@ -73,6 +73,14 @@ or declare a style in resources as the Demo app does.
 
 See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](http://vbcity.com/blogs/xtab/archive/2009/12/15/wpf-using-a-virtualizingstackpanel-to-improve-combobox-performance.aspx) for more detailed explanation.
 
+## Known Issues
+### Shared ItemsSource
+- Multiple ComboBoxes are affecting each other when using the same ItemsSource object.
+- Workaround: Use distinct ItemsSource instance for each AutoCompleteComboBox. For example, wrap it with a ReadOnlyCollection.
+
+### Background Not Applied
+`ComboBox` doesn't seem to support Background. I don't know easy fix.
+
 ## Internals
 This library is basically a thin wrapper of the standard `ComboBox` with some behaviors.
 
