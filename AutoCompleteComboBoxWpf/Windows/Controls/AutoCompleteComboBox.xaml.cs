@@ -81,7 +81,6 @@ namespace DotNetKit.Windows.Controls
         #endregion
 
         #region OnTextChanged
-        long revisionId;
         string previousText;
 
         struct TextBoxStatePreserver
@@ -121,36 +120,23 @@ namespace DotNetKit.Windows.Controls
             return count;
         }
 
-        void Unselect()
+        void UpdateFilter()
         {
+            var filter = GetFilter();
             var textBox = EditableTextBox;
+
+            // Assignment to Items.Filter sometimes clears the TextBox for some reason. The preserver is used as a workaround.
+            using (new TextBoxStatePreserver(textBox))
+            using (Items.DeferRefresh())
+            {
+                Items.Filter = filter;
+            }
+
+            // Unselect text.
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void UpdateFilter(Predicate<object> filter)
-        {
-            using (new TextBoxStatePreserver(EditableTextBox))
-            using (Items.DeferRefresh())
-            {
-                // Can empty the text box. I don't why.
-                Items.Filter = filter;
-            }
-        }
-
-        void OpenDropDown(Predicate<object> filter)
-        {
-            UpdateFilter(filter);
-            IsDropDownOpen = true;
-            Unselect();
-        }
-
-        void OpenDropDown()
-        {
-            var filter = GetFilter();
-            OpenDropDown(filter);
-        }
-
-        void UpdateSuggestionList()
+        void UpdateSuggestionList(bool autoOpen)
         {
             var text = Text;
 
@@ -169,8 +155,8 @@ namespace DotNetKit.Windows.Controls
             }
             else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
             {
-                // It seems the user selected an item.
-                // Do nothing.
+                // Some item is selected and therefore text is set. Keep the current filter.
+                return;
             }
             else
             {
@@ -179,25 +165,30 @@ namespace DotNetKit.Windows.Controls
                     SelectedItem = null;
                 }
 
-                var filter = GetFilter();
-                var maxCount = SettingOrDefault.MaxSuggestionCount;
-                var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
+                UpdateFilter();
 
-                if (0 < count && count <= maxCount && IsKeyboardFocusWithin)
+                // When the number of filtered items is small enough, automatically open the dropdown.
+                if (autoOpen && !IsDropDownOpen && IsKeyboardFocusWithin)
                 {
-                    OpenDropDown(filter);
+                    var filter = GetFilter();
+                    var maxCount = SettingOrDefault.MaxSuggestionCount;
+                    var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
+
+                    if (0 < count && count <= maxCount)
+                    {
+                        IsDropDownOpen = true;
+                    }
                 }
             }
         }
 
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var id = unchecked(++revisionId);
             var setting = SettingOrDefault;
 
             if (setting.Delay <= TimeSpan.Zero)
             {
-                UpdateSuggestionList();
+                UpdateSuggestionList(autoOpen: true);
                 return;
             }
 
@@ -210,29 +201,43 @@ namespace DotNetKit.Windows.Controls
             {
                 debounceTimer.Stop();
                 debounceTimer = null;
-
-                if (revisionId == id)
-                {
-                    UpdateSuggestionList();
-                }
+                UpdateSuggestionList(autoOpen: true);
             });
-            debounceTimer = new DispatcherTimer(setting.Delay, DispatcherPriority.Background, onTick, Dispatcher);
+            debounceTimer = new DispatcherTimer(setting.Delay, DispatcherPriority.Normal, onTick, Dispatcher);
             debounceTimer.Start();
         }
         #endregion
+
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            base.OnDropDownOpened(e);
+
+            // Update filter immediately.
+            if (debounceTimer != null)
+            {
+                debounceTimer.Stop();
+                debounceTimer = null;
+            }
+
+            UpdateSuggestionList(autoOpen: false);
+
+            // Text is all-selected on dropdown opened, unselect it.
+            var textBox = EditableTextBox;
+            textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
+        }
 
         void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && e.Key == Key.Space)
             {
-                OpenDropDown();
                 e.Handled = true;
+                IsDropDownOpen = true;
             }
         }
 
         Predicate<object> GetFilter()
         {
-            var filter = SettingOrDefault.GetFilter(Text, TextFromItem);
+            var filter = SettingOrDefault.GetFilter(Text ?? "", TextFromItem);
 
             return defaultItemsFilter != null
                 ? i => defaultItemsFilter(i) && filter(i)
