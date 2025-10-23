@@ -14,7 +14,7 @@
             <TextBlock>Changing Items source should preserve SelectedItem if possible (#28)</TextBlock>
 
             <StackPanel Orientation="Horizontal" Margin="0,10">
-                <dotNetKitControls:AutoCompleteComboBox
+                <!--<dotNetKitControls:AutoCompleteComboBox
                 SelectedValuePath="Id"
                 TextSearch.TextPath="Name"
                 ItemsSource="{Binding CollectionViewSource.View}"
@@ -29,7 +29,24 @@
                             </StackPanel>
                         </DataTemplate>
                     </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
-                </dotNetKitControls:AutoCompleteComboBox>
+                </dotNetKitControls:AutoCompleteComboBox>-->
+                <ComboBox
+                    dotNetKitControls:AutoCompleteBehavior.IsAttached="True"
+                    SelectedValuePath="Id"
+                    TextSearch.TextPath="Name"
+                    ItemsSource="{Binding CollectionViewSource.View}"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectedValue="{Binding SelectedValue}"
+                    HorizontalAlignment="Left" Width="200">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
+                                <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <TextBlock Margin="10,0,5,0">Filter:</TextBlock>
                 <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Width="80" />

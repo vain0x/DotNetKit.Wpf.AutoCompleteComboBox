@@ -21,8 +21,9 @@
             </TextBlock>
 
             <StackPanel Orientation="Horizontal" Margin="0,10">
-                <dotNetKitControls:AutoCompleteComboBox
+                <ComboBox
                     x:Name="autoCompleteComboBox"
+                    dotNetKitControls:AutoCompleteBehavior.IsAttached="True"
                     SelectedValuePath="Id"
                     TextSearch.TextPath="Name"
                     Text="{Binding Text}"
@@ -31,15 +32,15 @@
                     SelectedItem="{Binding SelectedItem}"
                     SelectedValue="{Binding SelectedValue}"
                     HorizontalAlignment="Left" Width="240">
-                    <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                    <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" />
                                 <TextBlock>Id = <Run Text="{Binding Id, Mode=OneTime}" />.</TextBlock>
                             </StackPanel>
                         </DataTemplate>
-                    </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
-                </dotNetKitControls:AutoCompleteComboBox>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Button Command="{Binding SelectPrevCommand}" Width="80" Margin="10,0,0,0">
                     Prev

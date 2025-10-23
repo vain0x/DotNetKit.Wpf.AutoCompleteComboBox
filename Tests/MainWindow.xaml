@@ -10,13 +10,20 @@
     d:DataContext="{d:DesignInstance tests:MainViewModel}"
     Title="Tests"
     Width="800" Height="800" FontSize="16">
+    <Window.Resources>
+        <DataTemplate x:Key="Cvs">
+            <cases:CollectionViewSourceCase />
+        </DataTemplate>
+    </Window.Resources>
     <ScrollViewer>
         <StackPanel Margin="16">
             <cases:BasicCase />
             <Separator />
             <cases:CollectionViewCase />
             <Separator />
-            <cases:CollectionViewSourceCase />
+            <Expander x:Name="expanded" Header="Cvs">
+                <ListBox x:Name="items" ItemsSource="{Binding Items}" ItemTemplate="{DynamicResource Cvs}" />
+            </Expander>
             <Separator />
             <cases:DataGridCase />
         </StackPanel>

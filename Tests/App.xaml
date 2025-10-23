@@ -15,6 +15,16 @@
             </Setter>
         </Style>
 
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Default styles for visual-->
         <Style TargetType="{x:Type Separator}">
             <Setter Property="Margin" Value="0,10" />

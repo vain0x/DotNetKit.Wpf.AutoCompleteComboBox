@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Data;
 
 namespace Tests
 {
@@ -12,7 +11,16 @@ namespace Tests
         {
             InitializeComponent();
 
-            DataContext = new MainViewModel();
+            var vm = new MainViewModel();
+            DataContext = vm;
+            expanded.Collapsed += (_, _) =>
+            {
+                vm.Items.Clear();
+            };
+            expanded.Expanded += (_, _) =>
+            {
+                vm.Items.Add(new object());
+            };
         }
     }
 }
