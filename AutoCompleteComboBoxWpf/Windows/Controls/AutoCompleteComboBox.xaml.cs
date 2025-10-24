@@ -1,4 +1,3 @@
-using DotNetKit.Windows.Media;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace DotNetKit.Windows.Controls
@@ -28,7 +29,7 @@ namespace DotNetKit.Windows.Controls
                 if (editableTextBoxCache == null)
                 {
                     const string name = "PART_EditableTextBox";
-                    editableTextBoxCache = (TextBox)VisualTreeModule.FindChild(this, name);
+                    editableTextBoxCache = (TextBox)FindChild(this, name);
                 }
                 return editableTextBoxCache;
             }
@@ -250,5 +251,66 @@ namespace DotNetKit.Windows.Controls
 
             AddHandler(TextBoxBase.TextChangedEvent, new TextChangedEventHandler(OnTextChanged));
         }
+
+        // Helpers
+
+        #region DependencyVariable
+        sealed class DependencyVariable<T> : DependencyObject
+        {
+            public static readonly DependencyProperty ValueProperty =
+                DependencyProperty.Register(
+                    "Value",
+                    typeof(T),
+                    typeof(DependencyVariable<T>)
+                );
+
+            public T Value
+            {
+                get { return (T)GetValue(ValueProperty); }
+                set { SetValue(ValueProperty, value); }
+            }
+
+            public void SetBinding(Binding binding)
+            {
+                BindingOperations.SetBinding(this, ValueProperty, binding);
+            }
+
+            public void SetBinding(object dataContext, string propertyPath)
+            {
+                SetBinding(new Binding(propertyPath) { Source = dataContext });
+            }
+        }
+        #endregion
+
+        #region FindChild
+        static FrameworkElement FindChild(DependencyObject obj, string childName)
+        {
+            if (obj == null) return null;
+
+            var queue = new Queue<DependencyObject>();
+            queue.Enqueue(obj);
+
+            while (queue.Count > 0)
+            {
+                obj = queue.Dequeue();
+
+                var childCount = VisualTreeHelper.GetChildrenCount(obj);
+                for (var i = 0; i < childCount; i++)
+                {
+                    var child = VisualTreeHelper.GetChild(obj, i);
+
+                    var fe = child as FrameworkElement;
+                    if (fe != null && fe.Name == childName)
+                    {
+                        return fe;
+                    }
+
+                    queue.Enqueue(child);
+                }
+            }
+
+            return null;
+        }
+        #endregion
     }
 }
