@@ -29,22 +29,21 @@ namespace DotNetKit.Windows.Controls
                 if (editableTextBoxCache == null)
                 {
                     const string name = "PART_EditableTextBox";
-                    editableTextBoxCache = (TextBox)FindChild(this, name);
+                    editableTextBoxCache = (TextBox)FindDescendant(this, name);
                 }
                 return editableTextBoxCache;
             }
         }
 
         /// <summary>
-        /// Gets text to match with the query from an item.
-        /// Never null.
+        /// Gets the text used for matching against the query.
+        /// Returns an empty string if the item is null.
         /// </summary>
-        /// <param name="item"/>
-        string TextFromItem(object item)
+        string GetItemText(object item)
         {
             if (item == null) return string.Empty;
 
-            var d = new DependencyVariable<string>();
+            var d = new BindingEvaluator<string>();
             d.SetBinding(item, TextSearch.GetTextPath(this));
             return d.Value ?? string.Empty;
         }
@@ -84,7 +83,7 @@ namespace DotNetKit.Windows.Controls
         #region OnTextChanged
         string previousText;
 
-        struct TextBoxStatePreserver
+        struct TextBoxStateSaver
             : IDisposable
         {
             readonly TextBox textBox;
@@ -98,7 +97,7 @@ namespace DotNetKit.Windows.Controls
                 textBox.Select(selectionStart, selectionLength);
             }
 
-            public TextBoxStatePreserver(TextBox textBox)
+            public TextBoxStateSaver(TextBox textBox)
             {
                 this.textBox = textBox;
                 selectionStart = textBox.SelectionStart;
@@ -107,7 +106,7 @@ namespace DotNetKit.Windows.Controls
             }
         }
 
-        static int CountWithMax<T>(IEnumerable<T> xs, Predicate<T> predicate, int maxCount)
+        static int CountUpTo<T>(IEnumerable<T> xs, Predicate<T> predicate, int maxCount)
         {
             var count = 0;
             foreach (var x in xs)
@@ -126,14 +125,15 @@ namespace DotNetKit.Windows.Controls
             var filter = GetFilter();
             var textBox = EditableTextBox;
 
-            // Assignment to Items.Filter sometimes clears the TextBox for some reason. The preserver is used as a workaround.
-            using (new TextBoxStatePreserver(textBox))
+            // Setting Items.Filter can sometimes clear the TextBox unexpectedly.
+            // The preserver is used as a workaround.
+            using (new TextBoxStateSaver(textBox))
             using (Items.DeferRefresh())
             {
                 Items.Filter = filter;
             }
 
-            // Unselect text.
+            // Deselect the text.
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
@@ -154,26 +154,26 @@ namespace DotNetKit.Windows.Controls
                     Items.Filter = defaultItemsFilter;
                 }
             }
-            else if (SelectedItem != null && TextFromItem(SelectedItem) == text)
+            else if (SelectedItem != null && GetItemText(SelectedItem) == text)
             {
                 // Some item is selected and therefore text is set. Keep the current filter.
                 return;
             }
             else
             {
-                using (new TextBoxStatePreserver(EditableTextBox))
+                using (new TextBoxStateSaver(EditableTextBox))
                 {
                     SelectedItem = null;
                 }
 
                 UpdateFilter();
 
-                // When the number of filtered items is small enough, automatically open the dropdown.
+                // Automatically opens the dropdown when the number of filtered items is within the allowed range.
                 if (autoOpen && !IsDropDownOpen && IsKeyboardFocusWithin)
                 {
                     var filter = GetFilter();
                     var maxCount = SettingOrDefault.MaxSuggestionCount;
-                    var count = CountWithMax(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
+                    var count = CountUpTo(ItemsSource?.Cast<object>() ?? Enumerable.Empty<object>(), filter, maxCount);
 
                     if (0 < count && count <= maxCount)
                     {
@@ -222,13 +222,14 @@ namespace DotNetKit.Windows.Controls
 
             UpdateSuggestionList(autoOpen: false);
 
-            // Text is all-selected on dropdown opened, unselect it.
+            // The text becomes fully selected when the dropdown opens; deselect it.
             var textBox = EditableTextBox;
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
         void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            // Ctrl+Space
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && e.Key == Key.Space)
             {
                 e.Handled = true;
@@ -238,7 +239,7 @@ namespace DotNetKit.Windows.Controls
 
         Predicate<object> GetFilter()
         {
-            var filter = SettingOrDefault.GetFilter(Text ?? "", TextFromItem);
+            var filter = SettingOrDefault.GetFilter(Text ?? "", GetItemText);
 
             return defaultItemsFilter != null
                 ? i => defaultItemsFilter(i) && filter(i)
@@ -254,15 +255,11 @@ namespace DotNetKit.Windows.Controls
 
         // Helpers
 
-        #region DependencyVariable
-        sealed class DependencyVariable<T> : DependencyObject
+        #region BindingEvaluator
+        sealed class BindingEvaluator<T> : DependencyObject
         {
             public static readonly DependencyProperty ValueProperty =
-                DependencyProperty.Register(
-                    "Value",
-                    typeof(T),
-                    typeof(DependencyVariable<T>)
-                );
+                DependencyProperty.Register("Value", typeof(T), typeof(BindingEvaluator<T>));
 
             public T Value
             {
@@ -282,8 +279,8 @@ namespace DotNetKit.Windows.Controls
         }
         #endregion
 
-        #region FindChild
-        static FrameworkElement FindChild(DependencyObject obj, string childName)
+        #region FindDescendant
+        static FrameworkElement FindDescendant(DependencyObject obj, string childName)
         {
             if (obj == null) return null;
 
