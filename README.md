@@ -1,8 +1,10 @@
 # AutoCompleteComboBox for WPF
 
+*The repository name has been changed from `DotNetKit.Wpf.AutoCompleteComboBox`.*
+
 [![NuGet version](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox.svg)](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox)
 
-Provides a lightweight combobox with filtering (auto-complete).
+A lightweight ComboBox control that supports filtering (auto completion).
 
 ## Screenshot
 ![](documents/images/screenshot.gif)
@@ -19,7 +21,7 @@ Declare XML namespace.
     ... >
 ```
 
-Then you can use `AutoCompleteComboBox`. It's like a normal `ComboBox` because of inheritance.
+You can then use `AutoCompleteComboBox` just like a normal `ComboBox`, since it inherits from it.
 
 ```xml
 <dotNetKitControls:AutoCompleteComboBox
@@ -34,15 +36,15 @@ Then you can use `AutoCompleteComboBox`. It's like a normal `ComboBox` because o
 Note that:
 
 - Set a property path to ``TextSearch.TextPath`` property.
-    - The path leads to a property whose getter produces a string value to identify items. For example, assume each item is an instance of `Person`, which has `Name` property, and the property path is "Name". If the user input "va", the combobox filters the items to remove ones (persons) whose `Name` don't contain "va".
-    - No support for ``TextSeach.Text``.
+    - The path should point to a property that returns a string used to identify items. For example, if each item is a `Person` object with a `Name` property, and ``TextSearch.TextPath`` is set to `"Name"`, typing `"va"` will filter out all items whose `Name` doesn't contain `"va"`.
+    - No support for ``TextSearch.Text``.
 - Don't use ``ComboBox.Items`` property directly. Use `ItemsSource` instead.
 - Although the Demo project uses DataTemplate to display items, you can also use `DisplayMemberPath`.
 
 ### Configuration
-This library works fine in the default setting, however, it also provides how to configure.
+The default settings should work well for most cases, but you can customize the behavior if needed.
 
-- Define a class derived from [DotNetKit.Windows.Controls.AutoCompleteComboBoxSetting](AutoCompleteComboBoxWpf/Windows/Controls/AutoCompleteComboBoxSetting.cs) to override some of properties.
+- Define a class derived from [DotNetKit.Windows.Controls.AutoCompleteComboBoxSetting](AutoCompleteComboBoxWpf/Windows/Controls/AutoCompleteComboBoxSetting.cs) to override some of its properties.
 - Set the instance to ``AutoCompleteComboBox.Setting`` property.
 
 ```xml
@@ -52,12 +54,12 @@ This library works fine in the default setting, however, it also provides how to
     />
 ```
 
-- Or set to ``AutoCompleteComboBoxSetting.Default`` to apply to all comboboxes.
+- Or set ``AutoCompleteComboBoxSetting.Default`` to apply to all comboboxes.
 
 ### Performance
-Filtering allows you to add a lot of items to a combobox without loss of usability, however, that makes the performance poor. To get rid of the issue, we recommend you to use `VirtualizingStackPanel` as the panel.
+Filtering allows you to add many items without losing usability, but it can affect performance. To improve this, we recommend using `VirtualizingStackPanel` as the items panel.
 
-Use `ItemsPanel` property:
+Use the `ItemsPanel` property:
 
 ```csharp
 <dotNetKitControls:AutoCompleteComboBox ...>
@@ -75,26 +77,24 @@ See also [WPF: Using a VirtualizingStackPanel to Improve ComboBox Performance](h
 
 ## Known Issues
 ### Shared ItemsSource
-- Multiple ComboBoxes are affecting each other when using the same ItemsSource object.
+- Multiple ComboBoxes can affect each other if they share the same ItemsSource instance.
 - Workaround: Use distinct ItemsSource instance for each AutoCompleteComboBox. For example, wrap it with a ReadOnlyCollection.
 
 ### Filter Conflict
-- Changing `AutoCompleteComboBox.Filter` in user code conflicts with the library's functionality.
+- Changing `AutoCompleteComboBox.Filter` in user code conflicts with the control's internal behavior.
 - Workaround: Avoid changing Filter in user code. Filter ItemsSource instead.
-- It seems no way to merge CollectionView filters correctly. Please let me know if you have a solution.
+- There seems to be no reliable way to merge CollectionView filters. Please let me know if you have a solution.
 
 ### Background Not Applied
-`ComboBox` doesn't seem to support Background. I don't know easy fix.
+`ComboBox` doesn't appear to support the `Background` property. No easy fix is known.
 
 ## Internals
-This library is basically a thin wrapper of the standard `ComboBox` with some behaviors.
+This library is essentially a thin wrapper around the standard `ComboBox` with additional behaviors.
 
 ### What Happens Under the Hood
+- Sets `IsEditable` to true to allow text input
 - Finds the TextBox part (in the ComboBox) to listen to the TextChanged event
-- Opens or close the dropdown whenever the text changed (and then the debounce timer fired)
+- Opens or closes the dropdown when the text changes (after the debounce timer fires)
     - TextBox selection is carefully saved and restored to not disturb the user
 - Filters the ComboBox items based on the input
-- Defines `ItemsSource` DependencyProperty that shadows the `ItemsControl.ItemsProperty` (see also [#26])
 - Handles PreviewKeyDown events (`Ctrl+Space`) to open the dropdown
-
-[#26]: https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/26
