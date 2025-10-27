@@ -13,6 +13,7 @@
     <PackageTags>Wpf Combobox AutoComplete</PackageTags>
     <PackageProjectUrl>https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox</PackageProjectUrl>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -23,5 +24,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+      <None Include="..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
