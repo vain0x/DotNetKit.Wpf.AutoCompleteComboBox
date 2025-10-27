@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net462;net8-windows</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Demo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoCompleteComboBoxWpf\AutoCompleteComboBoxWpf.csproj" />
+  </ItemGroup>
+
+</Project>

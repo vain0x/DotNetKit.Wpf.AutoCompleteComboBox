@@ -10,4 +10,4 @@
 #   - publish to NuGet
 #   - write release note there (copy from CHANGELOG)
 
-dotnet pack DotNetKit.Wpf.AutoCompleteComboBox -c Release
+dotnet pack AutoCompleteComboBoxWpf -c Release

@@ -4,6 +4,19 @@
 
 ----
 
+## 2.0.0 - 2025-10-28
+
+- Tracking PR: [v2 plan](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/38)
+- *BREAKING CHANGE*
+    - Upgrade to .NET 8 (from .NET 6)
+    - [Fix filter affects bound source collection by adding a dedicated FilterCollection by Fruchtzwerg94 · Pull Request #26](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/26) is reverted
+- Fix
+    - [Properly synchronize the current selected item - Improve and fix #28 by kvpt · Pull Request #29 · vain0x/DotNetKit.Wpf.AutoCompleteComboBox](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/29)
+- Filter changes are applied when dropdown opened
+- *Internals* (backward-compatible)
+    - Project/solution files are recreated (assembly name and namespaces are still unchanged)
+- *Announcement*: The repository will soon be renamed to a shorter name.
+
 ## 1.6.0 - 2023-04-22
 
 - [Try to keep SelectedItem when changing ItemsSource by tmijail · Pull Request #28](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/28)
