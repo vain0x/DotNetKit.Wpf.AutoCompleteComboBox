@@ -1,6 +1,6 @@
 # AutoCompleteComboBox for WPF
 
-*The repository name has been changed from `DotNetKit.Wpf.AutoCompleteComboBox`.*
+> *Announcement: This repository will soon be renamed to a shorter name.*
 
 [![NuGet version](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox.svg)](https://badge.fury.io/nu/DotNetKit.Wpf.AutoCompleteComboBox)
 
