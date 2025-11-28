@@ -4,6 +4,10 @@
 
 ----
 
+## 2.0.1 - 2025-11-29
+
+- Fix [Dropdown only opening on second click #39](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/issues/39)
+
 ## 2.0.0 - 2025-10-28
 
 - Tracking PR: [v2 plan](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/pull/38)
