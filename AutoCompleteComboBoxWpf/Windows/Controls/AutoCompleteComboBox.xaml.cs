@@ -137,7 +137,7 @@ namespace DotNetKit.Windows.Controls
             textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
         }
 
-        void UpdateSuggestionList(bool autoOpen)
+        void UpdateSuggestionList(bool controlOpen)
         {
             var text = Text;
 
@@ -146,7 +146,11 @@ namespace DotNetKit.Windows.Controls
 
             if (string.IsNullOrEmpty(text))
             {
-                IsDropDownOpen = false;
+                if (controlOpen)
+                {
+                    IsDropDownOpen = false;
+                }
+
                 SelectedItem = null;
 
                 using (Items.DeferRefresh())
@@ -169,7 +173,7 @@ namespace DotNetKit.Windows.Controls
                 UpdateFilter();
 
                 // Automatically opens the dropdown when the number of filtered items is within the allowed range.
-                if (autoOpen && !IsDropDownOpen && IsKeyboardFocusWithin)
+                if (controlOpen && !IsDropDownOpen && IsKeyboardFocusWithin)
                 {
                     var filter = GetFilter();
                     var maxCount = SettingOrDefault.MaxSuggestionCount;
@@ -189,7 +193,7 @@ namespace DotNetKit.Windows.Controls
 
             if (setting.Delay <= TimeSpan.Zero)
             {
-                UpdateSuggestionList(autoOpen: true);
+                UpdateSuggestionList(controlOpen: true);
                 return;
             }
 
@@ -202,7 +206,7 @@ namespace DotNetKit.Windows.Controls
             {
                 debounceTimer.Stop();
                 debounceTimer = null;
-                UpdateSuggestionList(autoOpen: true);
+                UpdateSuggestionList(controlOpen: true);
             });
             debounceTimer = new DispatcherTimer(setting.Delay, DispatcherPriority.Normal, onTick, Dispatcher);
             debounceTimer.Start();
@@ -220,7 +224,7 @@ namespace DotNetKit.Windows.Controls
                 debounceTimer = null;
             }
 
-            UpdateSuggestionList(autoOpen: false);
+            UpdateSuggestionList(controlOpen: false);
 
             // The text becomes fully selected when the dropdown opens; deselect it.
             var textBox = EditableTextBox;
