@@ -93,16 +93,19 @@ namespace DotNetKit.Windows.Controls
 
             public void Dispose()
             {
-                textBox.Text = text;
-                textBox.Select(selectionStart, selectionLength);
+                if (textBox != null)
+                {
+                    textBox.Text = text;
+                    textBox.Select(selectionStart, selectionLength);
+                }
             }
 
             public TextBoxStateSaver(TextBox textBox)
             {
                 this.textBox = textBox;
-                selectionStart = textBox.SelectionStart;
-                selectionLength = textBox.SelectionLength;
-                text = textBox.Text;
+                selectionStart = textBox?.SelectionStart ?? 0;
+                selectionLength = textBox?.SelectionLength ?? 0;
+                text = textBox?.Text ?? "";
             }
         }
 
@@ -134,7 +137,10 @@ namespace DotNetKit.Windows.Controls
             }
 
             // Deselect the text.
-            textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
+            if (textBox != null)
+            {
+                textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
+            }
         }
 
         void UpdateSuggestionList(bool controlOpen)
@@ -228,7 +234,10 @@ namespace DotNetKit.Windows.Controls
 
             // The text becomes fully selected when the dropdown opens; deselect it.
             var textBox = EditableTextBox;
-            textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
+            if (textBox != null)
+            {
+                textBox.Select(textBox.SelectionStart + textBox.SelectionLength, 0);
+            }
         }
 
         void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)

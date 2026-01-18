@@ -4,6 +4,10 @@
 
 ----
 
+## 2.0.2 - 2026-01-19
+
+- Fix [List does not open when IsEditable is set to False · Issue #40](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/issues/40)
+
 ## 2.0.1 - 2025-11-29
 
 - Fix [Dropdown only opening on second click #39](https://github.com/vain0x/DotNetKit.Wpf.AutoCompleteComboBox/issues/39)
